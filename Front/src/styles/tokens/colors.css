@@ -1,0 +1,58 @@
+:root {
+  /* ===================================================================
+     Paleta oficial Acadia — light mode (crema / cálido)
+     Estos son los tokens canónicos. Usar SIEMPRE estos en código nuevo.
+     =================================================================== */
+
+  /* Fondos */
+  --bg-page: #F1EEE8;
+  --bg-card: #FDFDFD;
+  --bg-soft: #F5F6F4;
+
+  /* Bordes */
+  --border-light: #DEDCD8;
+  --border-medium: #C8C7C5;
+
+  /* Marca — identidad visual Acadia (amarillos) */
+  --primary: #FBDEA3;
+  --primary-light: #F6C68A;
+  --primary-dark: #DF9F52;
+
+  /* Textos */
+  --text-primary: #221E3A;
+  --text-secondary: #7A6E6A;
+  --text-muted: #A9A8A8;
+
+  /* Tarjetas de cursos destacados */
+  --course-yellow: #F6C68A;
+  --course-orange: #F3B58D;
+  --course-pink: #FBAEAE;
+
+  /* Derivados (matices y estados — no son colores nuevos de marca) */
+  --primary-soft: #FBEFD6;          /* fondo highlight amarillo muy claro */
+  --primary-dark-hover: #CC8E45;    /* hover de botones primarios */
+  --on-primary: #2A1E08;            /* texto sobre amarillos claros (--primary) */
+  --on-primary-dark: #FFFFFF;       /* texto sobre --primary-dark */
+
+  --success: #5C8A6A;
+  --success-soft: #E4EDE5;
+  --danger: #C76B5E;
+  --danger-soft: #F6E4E0;
+
+  /* ===================================================================
+     Alias legacy → mapean los nombres antiguos (paleta oscura) al nuevo
+     sistema light. Permiten migrar sección por sección sin romper nada.
+     No usar estos en código nuevo; preferir los tokens de arriba.
+     =================================================================== */
+  --color-bg: var(--bg-page);
+  --color-surface: var(--bg-card);
+  --color-surface-2: var(--bg-soft);
+  --color-border: var(--border-light);
+  --color-primary: var(--primary-dark);
+  --color-primary-hover: var(--primary-dark-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-accent: var(--primary-dark);
+  --color-accent-soft: var(--primary-soft);
+  --color-text: var(--text-primary);
+  --color-text-muted: var(--text-secondary);
+}

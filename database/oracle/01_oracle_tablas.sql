@@ -1,0 +1,251 @@
+-- ============================================================
+-- PROYECTO EDTECH — ORACLE 21c XE
+-- Usuario: edtech_admin | Servicio: pdb_edtech
+-- Ejecutar TODO desde la conexión EdTech-Admin
+-- ============================================================
+
+-- ============================================================
+-- 1. SECUENCIAS
+-- ============================================================
+
+CREATE SEQUENCE SEQ_CATEGORIA     START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+CREATE SEQUENCE SEQ_INSTRUCTOR    START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+CREATE SEQUENCE SEQ_CURSO         START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+CREATE SEQUENCE SEQ_LECCION       START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+CREATE SEQUENCE SEQ_ALUMNO        START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+CREATE SEQUENCE SEQ_MATRICULA     START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+CREATE SEQUENCE SEQ_SUSCRIPCION   START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+CREATE SEQUENCE SEQ_CALIFICACION  START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+
+
+-- ============================================================
+-- 2. TABLAS (en orden de dependencia)
+-- ============================================================
+
+-- ------------------------------------------------------------
+-- 2.1 CATEGORIA
+-- Sin dependencias
+-- ------------------------------------------------------------
+CREATE TABLE CATEGORIA (
+    ID_CATEGORIA  NUMBER          CONSTRAINT PK_CATEGORIA PRIMARY KEY,
+    NOMBRE        VARCHAR2(100)   CONSTRAINT NN_CAT_NOMBRE   NOT NULL,
+    DESCRIPCION   VARCHAR2(500),
+    CONSTRAINT UQ_CAT_NOMBRE UNIQUE (NOMBRE)
+);
+
+-- ------------------------------------------------------------
+-- 2.2 INSTRUCTOR
+-- Sin dependencias
+-- ------------------------------------------------------------
+CREATE TABLE INSTRUCTOR (
+    ID_INSTRUCTOR   NUMBER          CONSTRAINT PK_INSTRUCTOR PRIMARY KEY,
+    NOMBRE          VARCHAR2(100)   CONSTRAINT NN_INS_NOMBRE    NOT NULL,
+    APELLIDO        VARCHAR2(100)   CONSTRAINT NN_INS_APELLIDO  NOT NULL,
+    EMAIL           VARCHAR2(150)   CONSTRAINT NN_INS_EMAIL     NOT NULL,
+    BIO             VARCHAR2(1000),
+    FECHA_REGISTRO  DATE            DEFAULT SYSDATE,
+    CONSTRAINT UQ_INS_EMAIL UNIQUE (EMAIL)
+);
+
+-- ------------------------------------------------------------
+-- 2.3 CURSO
+-- Depende de: CATEGORIA, INSTRUCTOR
+-- ------------------------------------------------------------
+CREATE TABLE CURSO (
+    ID_CURSO        NUMBER          CONSTRAINT PK_CURSO PRIMARY KEY,
+    TITULO          VARCHAR2(200)   CONSTRAINT NN_CUR_TITULO NOT NULL,
+    DESCRIPCION     VARCHAR2(2000),
+    PRECIO          NUMBER(8,2)     CONSTRAINT NN_CUR_PRECIO NOT NULL,
+    DURACION_HORAS  NUMBER(5,1),
+    NIVEL           VARCHAR2(20)    DEFAULT 'BASICO',
+    ID_CATEGORIA    NUMBER          CONSTRAINT NN_CUR_CAT NOT NULL,
+    ID_INSTRUCTOR   NUMBER          CONSTRAINT NN_CUR_INS NOT NULL,
+    FECHA_CREACION  DATE            DEFAULT SYSDATE,
+    ACTIVO          NUMBER(1)       DEFAULT 1,
+    CONSTRAINT FK_CURSO_CATEGORIA  FOREIGN KEY (ID_CATEGORIA)  REFERENCES CATEGORIA(ID_CATEGORIA),
+    CONSTRAINT FK_CURSO_INSTRUCTOR FOREIGN KEY (ID_INSTRUCTOR) REFERENCES INSTRUCTOR(ID_INSTRUCTOR),
+    CONSTRAINT CK_CURSO_NIVEL      CHECK (NIVEL IN ('BASICO','INTERMEDIO','AVANZADO')),
+    CONSTRAINT CK_CURSO_PRECIO     CHECK (PRECIO >= 0),
+    CONSTRAINT CK_CURSO_ACTIVO     CHECK (ACTIVO IN (0,1))
+);
+
+-- ------------------------------------------------------------
+-- 2.4 LECCION
+-- Depende de: CURSO
+-- ------------------------------------------------------------
+CREATE TABLE LECCION (
+    ID_LECCION      NUMBER          CONSTRAINT PK_LECCION PRIMARY KEY,
+    TITULO          VARCHAR2(200)   CONSTRAINT NN_LEC_TITULO NOT NULL,
+    DESCRIPCION     VARCHAR2(1000),
+    ORDEN           NUMBER(3)       CONSTRAINT NN_LEC_ORDEN NOT NULL,
+    DURACION_MIN    NUMBER(5),
+    ID_CURSO        NUMBER          CONSTRAINT NN_LEC_CURSO NOT NULL,
+    CONSTRAINT FK_LECCION_CURSO FOREIGN KEY (ID_CURSO) REFERENCES CURSO(ID_CURSO),
+    CONSTRAINT CK_LECCION_ORDEN CHECK (ORDEN > 0)
+);
+
+-- ------------------------------------------------------------
+-- 2.5 ALUMNO
+-- Sin dependencias
+-- ------------------------------------------------------------
+CREATE TABLE ALUMNO (
+    ID_ALUMNO        NUMBER          CONSTRAINT PK_ALUMNO PRIMARY KEY,
+    NOMBRE           VARCHAR2(100)   CONSTRAINT NN_ALU_NOMBRE    NOT NULL,
+    APELLIDO         VARCHAR2(100)   CONSTRAINT NN_ALU_APELLIDO  NOT NULL,
+    EMAIL            VARCHAR2(150)   CONSTRAINT NN_ALU_EMAIL     NOT NULL,
+    PASSWORD_HASH    VARCHAR2(255)   CONSTRAINT NN_ALU_PASS      NOT NULL,
+    FECHA_REGISTRO   DATE            DEFAULT SYSDATE,
+    ACTIVO           NUMBER(1)       DEFAULT 1,
+    CONSTRAINT UQ_ALU_EMAIL  UNIQUE (EMAIL),
+    CONSTRAINT CK_ALU_ACTIVO CHECK (ACTIVO IN (0,1))
+);
+
+-- ------------------------------------------------------------
+-- 2.6 MATRICULA
+-- Depende de: ALUMNO, CURSO
+-- ------------------------------------------------------------
+CREATE TABLE MATRICULA (
+    ID_MATRICULA    NUMBER          CONSTRAINT PK_MATRICULA PRIMARY KEY,
+    ID_ALUMNO       NUMBER          CONSTRAINT NN_MAT_ALUMNO NOT NULL,
+    ID_CURSO        NUMBER          CONSTRAINT NN_MAT_CURSO  NOT NULL,
+    FECHA_MATRICULA DATE            DEFAULT SYSDATE,
+    ESTADO          VARCHAR2(20)    DEFAULT 'ACTIVO',
+    CONSTRAINT FK_MATRICULA_ALUMNO FOREIGN KEY (ID_ALUMNO) REFERENCES ALUMNO(ID_ALUMNO),
+    CONSTRAINT FK_MATRICULA_CURSO  FOREIGN KEY (ID_CURSO)  REFERENCES CURSO(ID_CURSO),
+    CONSTRAINT UQ_MATRICULA        UNIQUE (ID_ALUMNO, ID_CURSO),
+    CONSTRAINT CK_MAT_ESTADO       CHECK (ESTADO IN ('ACTIVO','COMPLETADO','CANCELADO'))
+);
+
+-- ------------------------------------------------------------
+-- 2.7 SUSCRIPCION
+-- Depende de: ALUMNO
+-- ------------------------------------------------------------
+CREATE TABLE SUSCRIPCION (
+    ID_SUSCRIPCION  NUMBER          CONSTRAINT PK_SUSCRIPCION PRIMARY KEY,
+    ID_ALUMNO       NUMBER          CONSTRAINT NN_SUS_ALUMNO NOT NULL,
+    PLAN            VARCHAR2(20)    CONSTRAINT NN_SUS_PLAN   NOT NULL,
+    MONTO           NUMBER(8,2)     CONSTRAINT NN_SUS_MONTO  NOT NULL,
+    FECHA_INICIO    DATE            DEFAULT SYSDATE,
+    FECHA_FIN       DATE,
+    ESTADO          VARCHAR2(20)    DEFAULT 'ACTIVO',
+    CONSTRAINT FK_SUSCRIPCION_ALUMNO FOREIGN KEY (ID_ALUMNO) REFERENCES ALUMNO(ID_ALUMNO),
+    CONSTRAINT CK_SUS_PLAN           CHECK (PLAN   IN ('MENSUAL','ANUAL','UNICO')),
+    CONSTRAINT CK_SUS_ESTADO         CHECK (ESTADO IN ('ACTIVO','EXPIRADO','CANCELADO')),
+    CONSTRAINT CK_SUS_MONTO          CHECK (MONTO >= 0)
+);
+
+-- ------------------------------------------------------------
+-- 2.8 CALIFICACION
+-- Depende de: MATRICULA
+-- ------------------------------------------------------------
+CREATE TABLE CALIFICACION (
+    ID_CALIFICACION NUMBER          CONSTRAINT PK_CALIFICACION PRIMARY KEY,
+    ID_MATRICULA    NUMBER          CONSTRAINT NN_CAL_MATRICULA NOT NULL,
+    NOTA            NUMBER(4,1)     CONSTRAINT NN_CAL_NOTA      NOT NULL,
+    COMENTARIO      VARCHAR2(500),
+    FECHA           DATE            DEFAULT SYSDATE,
+    CONSTRAINT FK_CALIFICACION_MATRICULA FOREIGN KEY (ID_MATRICULA) REFERENCES MATRICULA(ID_MATRICULA),
+    CONSTRAINT CK_CAL_NOTA               CHECK (NOTA BETWEEN 0 AND 20)
+);
+
+
+-- ============================================================
+-- 3. ÍNDICES (en columnas FK y de búsqueda frecuente)
+-- ============================================================
+
+-- CURSO
+CREATE INDEX IDX_CURSO_CATEGORIA  ON CURSO(ID_CATEGORIA);
+CREATE INDEX IDX_CURSO_INSTRUCTOR ON CURSO(ID_INSTRUCTOR);
+
+-- LECCION
+CREATE INDEX IDX_LECCION_CURSO ON LECCION(ID_CURSO);
+
+-- MATRICULA
+CREATE INDEX IDX_MATRICULA_ALUMNO ON MATRICULA(ID_ALUMNO);
+CREATE INDEX IDX_MATRICULA_CURSO  ON MATRICULA(ID_CURSO);
+
+-- SUSCRIPCION
+CREATE INDEX IDX_SUSCRIPCION_ALUMNO ON SUSCRIPCION(ID_ALUMNO);
+
+-- CALIFICACION
+CREATE INDEX IDX_CALIFICACION_MATRICULA ON CALIFICACION(ID_MATRICULA);
+
+-- Nota: EMAIL ya está indexado automáticamente por los UNIQUE constraints
+-- de ALUMNO y INSTRUCTOR. No se requieren índices adicionales.
+
+
+-- ============================================================
+-- 4. VISTAS
+-- ============================================================
+
+-- Vista: catálogo completo de cursos con categoría e instructor
+CREATE OR REPLACE VIEW VW_CATALOGO_CURSOS AS
+SELECT
+    c.ID_CURSO,
+    c.TITULO,
+    c.DESCRIPCION,
+    c.PRECIO,
+    c.DURACION_HORAS,
+    c.NIVEL,
+    c.ACTIVO,
+    cat.NOMBRE        AS CATEGORIA,
+    i.NOMBRE || ' ' || i.APELLIDO AS INSTRUCTOR
+FROM CURSO c
+JOIN CATEGORIA  cat ON c.ID_CATEGORIA  = cat.ID_CATEGORIA
+JOIN INSTRUCTOR i   ON c.ID_INSTRUCTOR = i.ID_INSTRUCTOR;
+
+-- Vista: matrículas con nombre del alumno y título del curso
+CREATE OR REPLACE VIEW VW_MATRICULAS AS
+SELECT
+    m.ID_MATRICULA,
+    m.FECHA_MATRICULA,
+    m.ESTADO,
+    a.NOMBRE || ' ' || a.APELLIDO AS ALUMNO,
+    a.EMAIL,
+    c.TITULO AS CURSO
+FROM MATRICULA m
+JOIN ALUMNO a ON m.ID_ALUMNO = a.ID_ALUMNO
+JOIN CURSO  c ON m.ID_CURSO  = c.ID_CURSO;
+
+-- Vista: calificaciones con contexto completo
+CREATE OR REPLACE VIEW VW_CALIFICACIONES AS
+SELECT
+    cal.ID_CALIFICACION,
+    cal.NOTA,
+    cal.FECHA,
+    a.NOMBRE || ' ' || a.APELLIDO AS ALUMNO,
+    c.TITULO AS CURSO,
+    CASE
+        WHEN cal.NOTA >= 18 THEN 'EXCELENTE'
+        WHEN cal.NOTA >= 14 THEN 'APROBADO'
+        WHEN cal.NOTA >= 11 THEN 'EN RIESGO'
+        ELSE 'DESAPROBADO'
+    END AS RENDIMIENTO
+FROM CALIFICACION cal
+JOIN MATRICULA m ON cal.ID_MATRICULA = m.ID_MATRICULA
+JOIN ALUMNO    a ON m.ID_ALUMNO      = a.ID_ALUMNO
+JOIN CURSO     c ON m.ID_CURSO       = c.ID_CURSO;
+
+-- Vista: resumen de suscripciones activas por alumno
+CREATE OR REPLACE VIEW VW_SUSCRIPCIONES_ACTIVAS AS
+SELECT
+    s.ID_SUSCRIPCION,
+    a.NOMBRE || ' ' || a.APELLIDO AS ALUMNO,
+    a.EMAIL,
+    s.PLAN,
+    s.MONTO,
+    s.FECHA_INICIO,
+    s.FECHA_FIN,
+    s.ESTADO
+FROM SUSCRIPCION s
+JOIN ALUMNO a ON s.ID_ALUMNO = a.ID_ALUMNO
+WHERE s.ESTADO = 'ACTIVO';
+
+
+-- ============================================================
+-- FIN DEL SCRIPT
+-- Verificar con:
+--   SELECT TABLE_NAME FROM USER_TABLES ORDER BY TABLE_NAME;
+--   SELECT VIEW_NAME  FROM USER_VIEWS  ORDER BY VIEW_NAME;
+--   SELECT INDEX_NAME FROM USER_INDEXES ORDER BY INDEX_NAME;
+-- ============================================================

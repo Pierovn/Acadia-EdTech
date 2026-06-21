@@ -1,0 +1,21 @@
+:root {
+  /* Transiciones — toda interacción debe ser suave, nada brusco */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Sombras sutiles (light mode — tintadas con el texto, no negro puro) */
+  --shadow-soft: 0 1px 2px rgba(34, 30, 58, 0.04), 0 2px 6px rgba(34, 30, 58, 0.05);
+  --shadow-card: 0 4px 14px rgba(34, 30, 58, 0.07);
+  --shadow-hover: 0 8px 22px rgba(34, 30, 58, 0.10);
+}
+
+/* Aparición suave de páginas (opacity 0 → 1) */
+@keyframes acd-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.acd-fade-in {
+  animation: acd-fade-in var(--transition-base);
+}

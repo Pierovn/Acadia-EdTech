@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/* Design tokens */
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/spacing.css";
+@import "./tokens/radius.css";
+@import "./tokens/motion.css";
+
+/* Base */
+@import "./base/reset.css";
+
+/* Components */
+@import "./components/ui.css";
+@import "./components/breadcrumb.css";
+@import "./components/navbar.css";
+@import "./components/hero.css";
+@import "./components/course-card.css";
+@import "./components/forum.css";
+@import "./components/dashboard.css";
+@import "./components/payment.css";
+@import "./components/auth.css";
+
+/* Utilities */
+@import "./utilities/helpers.css";

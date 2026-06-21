@@ -1,0 +1,198 @@
+/* ===== Barra de progreso (reutilizable) ===== */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.progress__track {
+  flex: 1;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+}
+
+.progress__fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--primary-dark);
+  transition: width var(--transition-slow);
+}
+
+.progress__label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--text-secondary);
+  min-width: 34px;
+  text-align: right;
+}
+
+/* ===== Thumbnail de curso (color por categoría + ícono) ===== */
+.course-thumb {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.course-thumb--card {
+  width: 100%;
+  height: 140px;
+}
+
+.course-thumb--row {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+}
+
+/* Ícono grande, tenue, decorativo al fondo */
+.course-thumb__ghost {
+  position: absolute;
+  right: -10px;
+  bottom: -14px;
+  color: var(--on-primary);
+  opacity: 0.18;
+}
+
+/* Badge nítido al centro con el ícono de categoría */
+.course-thumb__badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-md);
+  background-color: rgba(253, 253, 253, 0.85);
+  color: var(--text-primary);
+}
+
+.course-thumb--row .course-thumb__badge {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+}
+
+.catalog__filters {
+  margin-bottom: var(--space-6);
+}
+
+/* ===== Grid del catálogo (3 columnas en desktop) ===== */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+
+@media (max-width: 1080px) {
+  .catalog-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 680px) {
+  .catalog-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== Card de curso (vertical) ===== */
+.course-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+  display: flex;
+  flex-direction: column;
+}
+
+.course-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-hover);
+}
+
+.course-card__thumb {
+  position: relative;
+}
+
+.course-card__badge {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+}
+
+.course-card__body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+}
+
+.course-card__title {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-tight);
+  color: var(--text-primary);
+}
+
+.course-card__instructor {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.course-card__meta {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.course-card__footer {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border-light);
+}
+
+.course-card__price {
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+}
+
+.course-card__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: var(--fw-semibold);
+  color: var(--primary-dark);
+}
+
+/* ===== Card de curso (fila horizontal) ===== */
+.course-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.course-row:hover {
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-soft);
+}
+
+.course-row__info { flex: 1; min-width: 0; }
+.course-row__title { font-weight: var(--fw-semibold); color: var(--text-primary); }
+.course-row__meta { font-size: var(--fs-sm); color: var(--text-secondary); }
+.course-row__rating { display: inline-flex; align-items: center; gap: 4px; color: var(--primary-dark); font-weight: var(--fw-semibold); }
+.course-row__btn { padding: var(--space-2) var(--space-4); font-size: var(--fs-sm); }

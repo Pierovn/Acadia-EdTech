@@ -1,0 +1,182 @@
+/* ===== Foro: lista de hilos + panel nuevo hilo ===== */
+.forum {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.forum__threads {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.forum__filters {
+  margin-bottom: var(--space-1);
+}
+
+/* ===== Hilo ===== */
+.thread {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-shadow: var(--shadow-soft);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.thread:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-card);
+}
+
+.thread__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.thread__author {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.thread__author-name {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+}
+
+.thread__time {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.thread__title {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+  line-height: var(--lh-tight);
+}
+
+.thread__content {
+  color: var(--text-secondary);
+  line-height: var(--lh-normal);
+}
+
+.thread__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.thread__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-light);
+  padding-top: var(--space-3);
+}
+
+.thread__count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.thread__respond {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--primary-dark);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast);
+}
+
+.thread__respond:hover { background-color: var(--primary-soft); }
+
+/* Respuestas anidadas */
+.thread__replies {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border-left: 2px solid var(--border-light);
+  padding-left: var(--space-4);
+  margin-top: var(--space-1);
+}
+
+.thread__reply { display: flex; gap: var(--space-3); }
+.thread__reply-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.thread__reply-text { font-size: var(--fs-sm); color: var(--text-primary); }
+.thread__reply-meta { font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* ===== Panel nuevo hilo ===== */
+.forum__new {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  position: sticky;
+  top: var(--space-6);
+  box-shadow: var(--shadow-soft);
+}
+
+.forum__new-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.forum__new-title svg { color: var(--primary-dark); }
+
+.forum__form { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.forum__input,
+.forum__textarea {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.forum__input::placeholder,
+.forum__textarea::placeholder { color: var(--text-muted); }
+
+.forum__input:focus,
+.forum__textarea:focus {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.forum__textarea { min-height: 90px; resize: vertical; }
+
+.forum__reply-box {
+  margin-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 1080px) {
+  .forum { grid-template-columns: 1fr; }
+  .forum__new { position: static; }
+}
