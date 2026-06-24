@@ -21,7 +21,7 @@
   flex-shrink: 0;
   background-color: var(--bg-card);
   border-right: 1px solid var(--border-light);
-  padding: var(--space-6) var(--space-4);
+  padding: var(--space-6) var(--space-4) var(--space-5);
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
@@ -30,109 +30,143 @@
   height: 100vh;
 }
 
+/* Marca — solo el logo (ya incluye el wordmark "ACADIA"), sin recorte */
 .sidebar__brand {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: 0 var(--space-2);
+  padding: 0 var(--space-2) var(--space-5);
+  border-bottom: 1px solid var(--border-light);
 }
 
-.sidebar__logo-img {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-md);
-  object-fit: cover;
-  flex-shrink: 0;
+.sidebar__logo {
+  display: block;
+  height: 34px;
+  width: auto;
+  object-fit: contain;
 }
 
-.sidebar__name {
-  font-size: var(--fs-xl);
-  font-weight: var(--fw-bold);
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
-}
-
+/* ===== Navegación ===== */
 .sidebar__nav {
   display: flex;
   flex-direction: column;
+  gap: var(--space-5);
+  overflow-y: auto;
+}
+
+.sidebar__group {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-1);
-  margin-top: var(--space-2);
+}
+
+.sidebar__section {
+  padding: 0 var(--space-3);
+  margin-bottom: var(--space-1);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .sidebar__link {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
-  /* borde izquierdo reservado para evitar salto al activarse */
-  border-left: 3px solid transparent;
   color: var(--text-secondary);
   font-weight: var(--fw-medium);
-  transition: background-color var(--transition-fast), color var(--transition-fast),
-    border-color var(--transition-fast);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
 }
+
+/* Tile del icono: el detalle que da personalidad y resalta el estado */
+.sidebar__tile {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-soft);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.sidebar__label { font-size: var(--fs-sm); }
 
 .sidebar__link:hover {
   background-color: var(--bg-soft);
   color: var(--text-primary);
 }
 
+.sidebar__link:hover .sidebar__tile {
+  background-color: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
 .sidebar__link--active {
-  background-color: var(--primary);
+  background-color: var(--primary-soft);
   color: var(--text-primary);
-  border-left-color: var(--primary-dark);
   font-weight: var(--fw-semibold);
 }
 
-.sidebar__link--active:hover {
-  background-color: var(--primary);
-}
-
-.sidebar__icon {
-  flex-shrink: 0;
-}
-
-/* Tarjeta decorativa inferior con stat */
-.sidebar__cta {
-  margin-top: auto;
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
+.sidebar__link--active .sidebar__tile {
   background-color: var(--primary-dark);
-  padding: var(--space-5) var(--space-4);
-  text-align: center;
   color: var(--on-primary-dark);
 }
 
-.sidebar__cta-glow {
-  position: absolute;
-  inset: -50% 25% auto;
-  height: 120px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.25), transparent 70%);
+.sidebar__link--active:hover {
+  background-color: var(--primary-soft);
 }
 
-.sidebar__cta-count {
-  position: relative;
-  font-size: var(--fs-2xl);
-  font-weight: var(--fw-bold);
+/* ===== Pie: usuario + cerrar sesión ===== */
+.sidebar__foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-light);
 }
 
-.sidebar__cta-text {
-  position: relative;
+.sidebar__user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+}
+
+.sidebar__user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sidebar__user-name {
   font-size: var(--fs-sm);
-  line-height: var(--lh-normal);
-  opacity: 0.92;
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+.sidebar__user-mail {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar__logout {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   font-weight: var(--fw-medium);
+  font-size: var(--fs-sm);
   transition: color var(--transition-fast), background-color var(--transition-fast);
 }
 
@@ -141,6 +175,7 @@
   background-color: var(--danger-soft);
 }
 
+/* ===== Responsive: barra superior compacta ===== */
 @media (max-width: 880px) {
   .layout { flex-direction: column; }
   .sidebar {
@@ -151,10 +186,28 @@
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
   }
-  .sidebar__nav { flex-direction: row; flex-wrap: wrap; margin-top: 0; }
-  .sidebar__link { border-left: none; border-bottom: 3px solid transparent; }
-  .sidebar__link--active { border-left: none; border-bottom-color: var(--primary-dark); }
-  .sidebar__cta { display: none; }
-  .sidebar__logout { margin-left: auto; }
+  .sidebar__brand { border-bottom: none; padding: 0; }
+  .sidebar__nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    overflow: visible;
+    flex: 1;
+  }
+  .sidebar__group { flex-direction: row; align-items: center; gap: var(--space-1); }
+  .sidebar__section { display: none; }
+  .sidebar__label { display: none; }
+  .sidebar__link { padding: var(--space-1); }
+  .sidebar__foot {
+    margin: 0;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0;
+    border: none;
+  }
+  .sidebar__user { display: none; }
+  .sidebar__logout span { display: none; }
 }

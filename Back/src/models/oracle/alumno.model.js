@@ -38,4 +38,65 @@ const create = async ({ nombre, apellido, email, passwordHash }) => {
   }
 };
 
-module.exports = { findByEmail, create };
+const findAll = async () => {
+  const conn = await getConnection();
+  try {
+    const result = await conn.execute(
+      `SELECT ID_ALUMNO, NOMBRE, APELLIDO, EMAIL, FECHA_REGISTRO, ACTIVO
+       FROM ALUMNO ORDER BY ID_ALUMNO`,
+      {},
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+    return result.rows;
+  } finally {
+    await conn.close();
+  }
+};
+
+const findById = async (id) => {
+  const conn = await getConnection();
+  try {
+    const result = await conn.execute(
+      `SELECT ID_ALUMNO, NOMBRE, APELLIDO, EMAIL, FECHA_REGISTRO, ACTIVO
+       FROM ALUMNO WHERE ID_ALUMNO = :id`,
+      { id },
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+    return result.rows[0] || null;
+  } finally {
+    await conn.close();
+  }
+};
+
+const update = async (id, { nombre, apellido }) => {
+  const conn = await getConnection();
+  try {
+    const result = await conn.execute(
+      `UPDATE ALUMNO
+       SET NOMBRE = COALESCE(:nombre, NOMBRE),
+           APELLIDO = COALESCE(:apellido, APELLIDO)
+       WHERE ID_ALUMNO = :id`,
+      { nombre: nombre ?? null, apellido: apellido ?? null, id },
+      { autoCommit: true }
+    );
+    return result.rowsAffected;
+  } finally {
+    await conn.close();
+  }
+};
+
+const remove = async (id) => {
+  const conn = await getConnection();
+  try {
+    const result = await conn.execute(
+      `UPDATE ALUMNO SET ACTIVO = 0 WHERE ID_ALUMNO = :id`,
+      { id },
+      { autoCommit: true }
+    );
+    return result.rowsAffected;
+  } finally {
+    await conn.close();
+  }
+};
+
+module.exports = { findByEmail, create, findAll, findById, update, remove };

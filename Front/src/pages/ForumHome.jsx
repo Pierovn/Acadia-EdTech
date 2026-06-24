@@ -4,6 +4,7 @@ import Layout from '../components/ui/Layout'
 import Breadcrumb from '../components/ui/Breadcrumb'
 import Spinner from '../components/ui/Spinner'
 import EmptyState from '../components/ui/EmptyState'
+import CourseThumb from '../components/ui/CourseThumb'
 import { getCursos } from '../services/cursos.service'
 import { IconForum, IconChevron } from '../components/ui/Icons'
 
@@ -39,10 +40,10 @@ const ForumHome = () => {
           <div className="forum-home">
             {cursos.map((c) => (
               <button key={c.ID_CURSO} type="button" className="forum-home__item" onClick={() => navigate(`/foro/${c.ID_CURSO}`)}>
-                <span className="forum-home__icon"><IconForum width={20} height={20} /></span>
+                <CourseThumb idCurso={c.ID_CURSO} categoria={c.CATEGORIA} titulo={c.TITULO} size="row" />
                 <div className="forum-home__info">
                   <h4 className="forum-home__title">{c.TITULO}</h4>
-                  <p className="forum-home__meta">{c.CATEGORIA}</p>
+                  <p className="forum-home__meta"><IconForum width={14} height={14} /> {c.CATEGORIA}</p>
                 </div>
                 <IconChevron width={18} height={18} className="forum-home__chevron" />
               </button>

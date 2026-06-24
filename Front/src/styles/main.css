@@ -19,6 +19,7 @@
 @import "./components/forum.css";
 @import "./components/dashboard.css";
 @import "./components/payment.css";
+@import "./components/grades.css";
 @import "./components/auth.css";
 
 /* Utilities */

@@ -48,4 +48,50 @@ const create = async ({ idMatricula, nota, comentario }) => {
   }
 };
 
-module.exports = { findByAlumno, create };
+const findById = async (id) => {
+  const conn = await getConnection();
+  try {
+    const result = await conn.execute(
+      `SELECT ID_CALIFICACION, ID_MATRICULA, NOTA, COMENTARIO, FECHA
+       FROM CALIFICACION WHERE ID_CALIFICACION = :id`,
+      { id },
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+    return result.rows[0] || null;
+  } finally {
+    await conn.close();
+  }
+};
+
+const update = async (id, { nota, comentario }) => {
+  const conn = await getConnection();
+  try {
+    const result = await conn.execute(
+      `UPDATE CALIFICACION
+       SET NOTA = COALESCE(:nota, NOTA),
+           COMENTARIO = COALESCE(:comentario, COMENTARIO)
+       WHERE ID_CALIFICACION = :id`,
+      { nota: nota ?? null, comentario: comentario ?? null, id },
+      { autoCommit: true }
+    );
+    return result.rowsAffected;
+  } finally {
+    await conn.close();
+  }
+};
+
+const remove = async (id) => {
+  const conn = await getConnection();
+  try {
+    const result = await conn.execute(
+      `DELETE FROM CALIFICACION WHERE ID_CALIFICACION = :id`,
+      { id },
+      { autoCommit: true }
+    );
+    return result.rowsAffected;
+  } finally {
+    await conn.close();
+  }
+};
+
+module.exports = { findByAlumno, create, findById, update, remove };

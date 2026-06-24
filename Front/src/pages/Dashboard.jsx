@@ -74,26 +74,40 @@ const Dashboard = () => {
     <Layout>
       <Breadcrumb items={[{ label: 'Inicio', to: '/dashboard' }, { label: 'Dashboard' }]} />
 
-      <div className="dashboard">
-        <section className="dashboard__center">
-          <header className="page-head">
-            <div>
-              <h1 className="page-head__title">Hola{nombre ? `, ${nombre}` : ''}</h1>
-              <p className="page-head__subtitle">Continúa donde lo dejaste</p>
-            </div>
-          </header>
+      <section className="dash-hero">
+        <div className="dash-hero__text">
+          <span className="dash-hero__eyebrow">Tu panel</span>
+          <h1 className="dash-hero__title">Hola{nombre ? `, ${nombre}` : ''}</h1>
+          <p className="dash-hero__sub">Continúa donde lo dejaste y sigue avanzando a tu ritmo.</p>
+        </div>
+        <button type="button" className="acd-btn acd-btn--primary dash-hero__cta" onClick={() => navigate('/catalog')}>
+          Explorar cursos
+        </button>
+      </section>
 
-          {loading && <Spinner center label="Cargando tus cursos…" />}
-          {error && <p className="acd-error">{error}</p>}
+      {loading && <Spinner center label="Cargando tus cursos…" />}
+      {error && <p className="acd-error">{error}</p>}
 
-          {!loading && !error && (
-            <>
+      {!loading && !error && (
+        <>
+          <div className="dash-stats">
+            {stats.map((s) => (
+              <div key={s.label} className="stat-card">
+                <span className="stat-card__icon"><s.Icon width={20} height={20} /></span>
+                <span className="stat-card__value">{s.value}</span>
+                <span className="stat-card__label">{s.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="dash-grid">
+            <section className="dash-courses">
               <h2 className="dashboard__section-title">Mis cursos</h2>
               {cursos.length > 0 ? (
                 <div className="dashboard__courses">
                   {cursos.map((c) => (
                     <article key={c.ID_MATRICULA} className="mycourse">
-                      <CourseThumb categoria={c.CATEGORIA} titulo={c.CURSO} size="row" />
+                      <CourseThumb idCurso={c.ID_CURSO} categoria={c.CATEGORIA} titulo={c.CURSO} size="row" />
                       <div className="mycourse__main">
                         <div className="mycourse__top">
                           <h4 className="mycourse__title">{c.CURSO}</h4>
@@ -124,37 +138,27 @@ const Dashboard = () => {
                   }
                 />
               )}
-            </>
-          )}
-        </section>
+            </section>
 
-        <aside className="dashboard__side">
-          <div className="stats-grid">
-            {stats.map((s) => (
-              <div key={s.label} className="stat-card">
-                <span className="stat-card__icon"><s.Icon width={20} height={20} /></span>
-                <span className="stat-card__value">{s.value}</span>
-                <span className="stat-card__label">{s.label}</span>
+            <aside className="dash-side">
+              <div className="news-card">
+                <h3 className="news-card__title">Novedades</h3>
+                <ul className="news-card__list">
+                  {novedades.map((n) => (
+                    <li key={n.titulo} className="news-item">
+                      <span className="news-item__dot" />
+                      <div>
+                        <p className="news-item__title">{n.titulo}</p>
+                        <span className="news-item__tag">{n.tag}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            ))}
+            </aside>
           </div>
-
-          <div className="news-card">
-            <h3 className="news-card__title">Novedades</h3>
-            <ul className="news-card__list">
-              {novedades.map((n) => (
-                <li key={n.titulo} className="news-item">
-                  <span className="news-item__dot" />
-                  <div>
-                    <p className="news-item__title">{n.titulo}</p>
-                    <span className="news-item__tag">{n.tag}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
-      </div>
+        </>
+      )}
     </Layout>
   )
 }

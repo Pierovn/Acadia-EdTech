@@ -1,5 +1,6 @@
 /* ===================================================================
-   Autenticación (Login + Register): fondo base + container flotante 50/50.
+   Autenticación (Login + Register): fondo limpio + container flotante 50/50.
+   Lado visual = solo la ilustración (LadoIzquierdo.png), sin texto encima.
    Un único sistema de clases .auth* compartido por ambas vistas.
    =================================================================== */
 .auth {
@@ -8,48 +9,17 @@
   display: grid;
   place-items: center;
   padding: clamp(var(--space-4), 3vw, var(--space-8));
-  background-color: var(--bg-page);
-  overflow: hidden;
-}
-
-/* Formas decorativas con trama diagonal, detrás del container */
-.auth__shape {
-  position: absolute;
-  z-index: 0;
-  opacity: 0.5;
-  pointer-events: none;
-  width: clamp(160px, 16vw, 280px);
-  height: clamp(150px, 15vw, 240px);
-}
-
-.auth__shape--top {
-  top: 7%;
-  left: 7%;
-  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 80px;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--primary-light) 0 6px,
-    transparent 6px 15px
-  );
-}
-
-.auth__shape--bottom {
-  bottom: 7%;
-  right: 7%;
-  border-radius: var(--radius-lg) var(--radius-lg) 90px var(--radius-lg);
-  background: repeating-linear-gradient(
-    45deg,
-    var(--course-pink) 0 6px,
-    transparent 6px 15px
-  );
+  background:
+    radial-gradient(120% 120% at 85% 10%, var(--primary-soft) 0%, transparent 55%),
+    linear-gradient(160deg, var(--bg-page) 0%, var(--bg-soft) 100%);
 }
 
 /* Container grande flotante — mismo tamaño en cualquier monitor */
 .auth__card {
   position: relative;
-  z-index: 1;
-  width: clamp(340px, 90vw, 1280px);
-  min-height: clamp(580px, 82vh, 760px);
+  /* Muy ancho: cada mitad (~1.5) calza con la imagen (AR 1.5) → sin franjas */
+  width: min(96vw, 2040px);
+  min-height: clamp(560px, 84vh, 720px);
   display: grid;
   grid-template-columns: 1fr 1fr;
   background-color: var(--bg-card);
@@ -59,97 +29,19 @@
   overflow: hidden;
 }
 
-/* ===== Mitad visual ===== */
+/* ===== Mitad visual — la imagen llena el panel, sin franjas ===== */
 .auth__visual {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  padding: clamp(var(--space-6), 3vw, var(--space-8));
   background-color: var(--primary-dark);
-  background-size: cover;
-  background-position: center;
-  color: #fff;
-  isolation: isolate;
+  overflow: hidden;
 }
 
-.auth__visual-veil {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(
-    158deg,
-    rgba(223, 159, 82, 0.92) 0%,
-    rgba(207, 142, 69, 0.88) 38%,
-    rgba(34, 30, 58, 0.92) 100%
-  );
-}
-
-.auth__brand {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.auth__logo {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-md);
+.auth__visual-img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-}
-
-.auth__brand-name {
-  font-size: var(--fs-xl);
-  font-weight: var(--fw-bold);
-  letter-spacing: -0.01em;
-}
-
-.auth__visual-body {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.auth__visual-title {
-  font-size: var(--fs-3xl);
-  font-weight: var(--fw-bold);
-  line-height: var(--lh-tight);
-  max-width: 14ch;
-}
-
-.auth__visual-sub {
-  font-size: var(--fs-base);
-  line-height: var(--lh-normal);
-  color: rgba(255, 255, 255, 0.88);
-  max-width: 38ch;
-}
-
-/* Highlights inferiores (estáticos, con ícono) */
-.auth__highlights {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
-}
-
-.auth__highlight {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  font-size: var(--fs-sm);
-  color: rgba(255, 255, 255, 0.92);
-}
-
-.auth__highlight-icon {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-md);
-  background-color: rgba(255, 255, 255, 0.16);
-  color: #fff;
-  flex-shrink: 0;
+  object-position: center;
 }
 
 /* ===== Mitad formulario ===== */
@@ -162,7 +54,21 @@
 .auth__top {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+/* El logo ya contiene el wordmark "ACADIA": se muestra tal cual, sin recorte */
+.auth__logo {
+  display: block;
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.auth__top-cta {
+  display: inline-flex;
+  align-items: center;
   gap: var(--space-2);
   font-size: var(--fs-sm);
 }
@@ -278,8 +184,7 @@
 .auth__submit { width: 100%; }
 
 .auth__footer {
-  margin-top: auto;
-  padding-top: var(--space-5);
+  padding-top: var(--space-4);
   font-size: var(--fs-xs);
   color: var(--text-muted);
   text-align: center;
@@ -291,23 +196,12 @@
     grid-template-columns: 1fr;
     min-height: 0;
   }
-  .auth__visual {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4);
-    padding: var(--space-5);
-  }
-  .auth__visual-body { margin-top: 0; }
-  .auth__visual-title { font-size: var(--fs-xl); }
-  .auth__visual-sub,
-  .auth__highlights { display: none; }
-  .auth__shape { display: none; }
-  .auth__form { padding: var(--space-4) 0; }
+  /* La ilustración pasa a banner superior */
+  .auth__visual { height: clamp(140px, 28vh, 200px); }
+  .auth__form { padding: var(--space-4) 0; max-width: none; }
 }
 
 @media (max-width: 520px) {
-  .auth__visual { flex-direction: column; align-items: flex-start; }
-  .auth__visual-body { margin-top: var(--space-3); }
   .auth__row { grid-template-columns: 1fr; }
+  .auth__top { flex-wrap: wrap; gap: var(--space-3); }
 }

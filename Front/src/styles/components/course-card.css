@@ -50,6 +50,16 @@
   border-radius: var(--radius-md);
 }
 
+/* Variante con imagen real del curso */
+.course-thumb--photo { background-color: var(--bg-soft); }
+
+.course-thumb__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 /* Ícono grande, tenue, decorativo al fondo */
 .course-thumb__ghost {
   position: absolute;

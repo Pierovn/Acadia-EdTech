@@ -25,12 +25,67 @@
   padding: var(--space-5);
 }
 
-/* ===== Dashboard: 2 columnas (centro + panel) ===== */
-.dashboard {
+/* ===== Dashboard ===== */
+/* Hero de bienvenida */
+.dash-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-6);
+  padding: var(--space-6);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(120deg, var(--primary-soft) 0%, var(--bg-card) 60%);
+  box-shadow: var(--shadow-soft);
+}
+
+.dash-hero__eyebrow {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary-dark);
+}
+
+.dash-hero__title {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin-top: var(--space-1);
+  text-transform: capitalize;
+}
+
+.dash-hero__sub {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  margin-top: var(--space-2);
+}
+
+.dash-hero__cta { flex-shrink: 0; }
+
+/* Fila de métricas */
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+/* Cuerpo: cursos + panel lateral */
+.dash-grid {
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: var(--space-6);
   align-items: start;
+}
+
+.dash-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
 }
 
 .dashboard__section-title {
@@ -87,19 +142,6 @@
 }
 
 .mycourse__go:hover { background-color: var(--bg-soft); color: var(--primary-dark); }
-
-/* ===== Panel lateral derecho ===== */
-.dashboard__side {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
-}
 
 .stat-card {
   background-color: var(--bg-card);
@@ -166,7 +208,11 @@
 .news-item__tag { font-size: var(--fs-xs); color: var(--text-secondary); }
 
 @media (max-width: 1080px) {
-  .dashboard { grid-template-columns: 1fr; }
+  .dash-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 720px) {
+  .dash-stats { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ===== Perfil ===== */
@@ -291,5 +337,12 @@
 
 .forum-home__info { flex: 1; min-width: 0; }
 .forum-home__title { font-weight: var(--fw-semibold); color: var(--text-primary); }
-.forum-home__meta { font-size: var(--fs-sm); color: var(--text-secondary); }
+.forum-home__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+.forum-home__meta svg { color: var(--primary-dark); }
 .forum-home__chevron { color: var(--text-muted); flex-shrink: 0; }

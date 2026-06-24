@@ -15,7 +15,7 @@ const CourseCard = ({ curso, variant = 'grid', progreso, rating }) => {
   if (variant === 'row') {
     return (
       <article className="course-row" onClick={goDetail}>
-        <CourseThumb categoria={categoria} titulo={titulo} size="row" />
+        <CourseThumb idCurso={curso.ID_CURSO} categoria={categoria} titulo={titulo} size="row" />
         <div className="course-row__info">
           <h4 className="course-row__title">{titulo}</h4>
           <p className="course-row__meta">{instructor} · {curso.NIVEL}</p>
@@ -33,7 +33,7 @@ const CourseCard = ({ curso, variant = 'grid', progreso, rating }) => {
   return (
     <article className="course-card" onClick={goDetail}>
       <div className="course-card__thumb">
-        <CourseThumb categoria={categoria} titulo={titulo} size="card" />
+        <CourseThumb idCurso={curso.ID_CURSO} categoria={categoria} titulo={titulo} size="card" />
         {categoria && <Badge variant="primary" className="course-card__badge">{categoria}</Badge>}
       </div>
       <div className="course-card__body">

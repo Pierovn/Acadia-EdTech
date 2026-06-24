@@ -9,6 +9,8 @@ import Forum from './pages/Forum'
 import ForumHome from './pages/ForumHome'
 import Perfil from './pages/Perfil'
 import Configuracion from './pages/Configuracion'
+import Checkout from './pages/Checkout'
+import Calificaciones from './pages/Calificaciones'
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth()
@@ -46,6 +48,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Configuracion />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/calificaciones"
+            element={
+              <ProtectedRoute>
+                <Calificaciones />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
               </ProtectedRoute>
             }
           />

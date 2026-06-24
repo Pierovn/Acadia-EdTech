@@ -1,0 +1,105 @@
+.grades-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.grades-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 160px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-soft);
+}
+
+.grades-stat__value {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.grades-stat__label {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.grades-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.grade-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-soft);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.grade-card:hover {
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-card);
+}
+
+.grade-card__nota {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-lg);
+  background-color: var(--primary-soft);
+  color: var(--primary-dark);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  flex-shrink: 0;
+}
+
+.grade-card__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.grade-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.grade-card__curso {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+}
+
+.grade-card__comment {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.grade-card__date {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+@media (max-width: 680px) {
+  .grade-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -16,7 +16,8 @@ const register = async (req, res) => {
     const id = await alumnoModel.create({ nombre, apellido, email, passwordHash });
     res.status(201).json({ mensaje: 'Registrado correctamente', id_alumno: id });
   } catch (err) {
-    res.status(500).json({ error: 'Error al registrar', detalle: err.message });
+    console.error('Error al registrar:', err);
+    res.status(500).json({ error: 'Error al registrar' });
   }
 };
 
@@ -41,7 +42,8 @@ const login = async (req, res) => {
 
     res.json({ token });
   } catch (err) {
-    res.status(500).json({ error: 'Error al iniciar sesión', detalle: err.message });
+    console.error('Error al iniciar sesión:', err);
+    res.status(500).json({ error: 'Error al iniciar sesión' });
   }
 };
 

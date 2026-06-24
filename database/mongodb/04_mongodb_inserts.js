@@ -85,16 +85,16 @@ db.progreso_alumno.insertMany([
 // ============================================================
 db.materiales_curso.insertMany([
   // Curso 1 — JavaScript
-  { id_leccion: 1,  id_curso: 1,  tipo: "video", titulo: "Variables y tipos en JS",              url: "https://edtech.pe/videos/js-variables",       duracion_min: 55 },
-  { id_leccion: 2,  id_curso: 1,  tipo: "pdf",   titulo: "Guía de funciones y closures",         url: "https://edtech.pe/pdf/js-funciones.pdf" },
+  { id_leccion: 1,  id_curso: 1,  tipo: "video", titulo: "Variables y tipos en JS",              url: "https://youtu.be/z95mZVUcJ-E",                 duracion_min: 55 },
+  { id_leccion: 2,  id_curso: 1,  tipo: "pdf",   titulo: "Guía de funciones y closures",         url: "https://drive.google.com/file/d/1U_wUGWJF_aB0DXJjzFxKA39xTnDtq8Vv/view?usp=drive_link" },
   { id_leccion: 3,  id_curso: 1,  tipo: "quiz",  titulo: "Quiz: Asincronía en JS",               preguntas: [{ pregunta: "¿Qué devuelve una función async?", opciones: ["Un valor directo","Una Promise","undefined","Un callback"], respuesta_correcta: 1 }] },
   // Curso 2 — React + Node
-  { id_leccion: 4,  id_curso: 2,  tipo: "video", titulo: "Componentes funcionales en React",     url: "https://edtech.pe/videos/react-componentes",   duracion_min: 75 },
-  { id_leccion: 5,  id_curso: 2,  tipo: "pdf",   titulo: "Hooks: guía completa",                 url: "https://edtech.pe/pdf/react-hooks.pdf" },
+  { id_leccion: 4,  id_curso: 2,  tipo: "video", titulo: "Componentes funcionales en React",     url: "https://youtu.be/7iobxzd_2wY",                 duracion_min: 75 },
+  { id_leccion: 5,  id_curso: 2,  tipo: "pdf",   titulo: "Hooks: guía completa",                 url: "https://drive.google.com/file/d/1ZKtJw7bGrMvOjI9LadAWqc23hE6Vgsnu/view?usp=sharing" },
   { id_leccion: 6,  id_curso: 2,  tipo: "quiz",  titulo: "Quiz: API REST con Express",           preguntas: [{ pregunta: "¿Qué método HTTP se usa para crear un recurso?", opciones: ["GET","POST","PUT","DELETE"], respuesta_correcta: 1 }] },
   // Curso 3 — UI/UX
-  { id_leccion: 7,  id_curso: 3,  tipo: "video", titulo: "Principios de diseño visual",          url: "https://edtech.pe/videos/ux-principios",       duracion_min: 55 },
-  { id_leccion: 8,  id_curso: 3,  tipo: "pdf",   titulo: "Guía de wireframing",                  url: "https://edtech.pe/pdf/wireframes.pdf" },
+  { id_leccion: 7,  id_curso: 3,  tipo: "video", titulo: "Principios de diseño visual",          url: "https://youtu.be/DjshEwI6pVk",                 duracion_min: 55 },
+  { id_leccion: 8,  id_curso: 3,  tipo: "pdf",   titulo: "Guía de wireframing",                  url: "https://youtu.be/8Wqgr7Ry3dk" },
   { id_leccion: 9,  id_curso: 3,  tipo: "quiz",  titulo: "Quiz: Design Systems",                 preguntas: [{ pregunta: "¿Qué es un Design System?", opciones: ["Una plantilla HTML","Componentes y reglas de diseño reutilizables","Un tipo de prototipo","Un framework CSS"], respuesta_correcta: 1 }] },
   // Curso 4 — Illustrator
   { id_leccion: 10, id_curso: 4,  tipo: "video", titulo: "Herramientas de vector",               url: "https://edtech.pe/videos/ai-vectores",         duracion_min: 50 },
