@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import ProgressBar from './ProgressBar'
 import Badge from './Badge'
 import CourseThumb from './CourseThumb'
-import { IconStar, IconClock } from './Icons'
+import { IconStar, IconClock, IconChevron } from './Icons'
 
 const CourseCard = ({ curso, variant = 'grid', progreso, rating }) => {
   const navigate = useNavigate()
@@ -34,7 +34,9 @@ const CourseCard = ({ curso, variant = 'grid', progreso, rating }) => {
     <article className="course-card" onClick={goDetail}>
       <div className="course-card__thumb">
         <CourseThumb idCurso={curso.ID_CURSO} categoria={categoria} titulo={titulo} size="card" />
+        <span className="course-card__shade" />
         {categoria && <Badge variant="primary" className="course-card__badge">{categoria}</Badge>}
+        {curso.NIVEL && <span className="course-card__level">{curso.NIVEL}</span>}
       </div>
       <div className="course-card__body">
         <h3 className="course-card__title">{titulo}</h3>
@@ -44,16 +46,18 @@ const CourseCard = ({ curso, variant = 'grid', progreso, rating }) => {
           <ProgressBar value={progreso} />
         ) : (
           <div className="course-card__meta">
-            <Badge variant="muted"><IconClock width={13} height={13} /> {curso.DURACION_HORAS}h</Badge>
-            <Badge variant="muted">{curso.NIVEL}</Badge>
+            {curso.DURACION_HORAS != null && (
+              <Badge variant="muted"><IconClock width={13} height={13} /> {curso.DURACION_HORAS}h</Badge>
+            )}
+            {typeof rating === 'number' && (
+              <Badge variant="muted"><IconStar width={13} height={13} /> {rating.toFixed(1)}</Badge>
+            )}
           </div>
         )}
 
         <div className="course-card__footer">
           <span className="course-card__price">S/ {Number(curso.PRECIO).toFixed(2)}</span>
-          {typeof rating === 'number' && (
-            <span className="course-card__rating"><IconStar width={15} height={15} /> {rating.toFixed(1)}</span>
-          )}
+          <span className="course-card__cta">Ver curso <IconChevron width={15} height={15} /></span>
         </div>
       </div>
     </article>

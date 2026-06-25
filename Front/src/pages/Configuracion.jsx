@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Layout from '../components/ui/Layout'
-import Breadcrumb from '../components/ui/Breadcrumb'
 import { useAuth } from '../context/AuthContext'
 
 const Configuracion = () => {
@@ -19,8 +18,6 @@ const Configuracion = () => {
 
   return (
     <Layout>
-      <Breadcrumb items={[{ label: 'Inicio', to: '/dashboard' }, { label: 'Configuración' }]} />
-
       <header className="page-head">
         <div>
           <h1 className="page-head__title">Configuración</h1>

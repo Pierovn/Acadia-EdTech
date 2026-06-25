@@ -38,6 +38,14 @@ export const IconLock = (p) => (
   <svg {...base} {...p}><rect x="4" y="11" width="16" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
 )
 
+export const IconEye = (p) => (
+  <svg {...base} {...p}><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" /><circle cx="12" cy="12" r="3" /></svg>
+)
+
+export const IconEyeOff = (p) => (
+  <svg {...base} {...p}><path d="M9.9 5.1A9.6 9.6 0 0 1 12 5c6.5 0 10 7 10 7a17.6 17.6 0 0 1-3 3.6" /><path d="M6.2 6.2A17.4 17.4 0 0 0 2 12s3.5 7 10 7a9.6 9.6 0 0 0 4-.8" /><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" /><path d="M3 3l18 18" /></svg>
+)
+
 export const IconStar = (p) => (
   <svg {...base} fill="currentColor" stroke="none" {...p}><path d="M12 2.5l2.9 5.9 6.5.95-4.7 4.58 1.1 6.47L12 17.9l-5.8 3.07 1.1-6.47-4.7-4.58 6.5-.95z" /></svg>
 )

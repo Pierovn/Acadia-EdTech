@@ -4,13 +4,20 @@ import Layout from '../components/ui/Layout'
 import Breadcrumb from '../components/ui/Breadcrumb'
 import Spinner from '../components/ui/Spinner'
 import ProgressBar from '../components/ui/ProgressBar'
+import Quiz from '../components/ui/Quiz'
 import { getCursoById, getLecciones } from '../services/cursos.service'
-import { matricularse } from '../services/matriculas.service'
+import { matricularse, getMisCursos, actualizarEstadoMatricula } from '../services/matriculas.service'
 import { getMaterialesPorCurso } from '../services/materiales.service'
 import { getProgreso, actualizarProgreso } from '../services/progreso.service'
+import { getCalificaciones, crearCalificacion } from '../services/calificaciones.service'
 import { useAuth } from '../context/AuthContext'
 import { courseImage } from '../components/ui/courseImages'
-import { IconClock, IconForum, IconCreditCard, IconCheck, IconPlay, IconDoc, IconQuiz } from '../components/ui/Icons'
+import { QUIZZES } from '../data/quizzes'
+import {
+  IconClock, IconForum, IconCreditCard, IconCheck, IconPlay, IconDoc, IconQuiz, IconLock, IconCheckCircle,
+} from '../components/ui/Icons'
+
+const NOTA_POR_DEFECTO = 15
 
 const MATERIAL_META = {
   video: { Icon: IconPlay, label: 'Video' },
@@ -18,9 +25,16 @@ const MATERIAL_META = {
   quiz: { Icon: IconQuiz, label: 'Quiz' },
 }
 
-const MaterialChip = ({ material }) => {
+const MaterialChip = ({ material, locked }) => {
   const meta = MATERIAL_META[material.tipo] || MATERIAL_META.pdf
   const { Icon } = meta
+  if (locked) {
+    return (
+      <span className="material-chip material-chip--locked">
+        <IconLock width={13} height={13} /> {material.titulo}
+      </span>
+    )
+  }
   const extra = material.tipo === 'video' && material.duracion_min ? ` · ${material.duracion_min} min` : ''
   const contenido = (
     <>
@@ -46,6 +60,9 @@ const CourseDetail = () => {
   const [lecciones, setLecciones] = useState([])
   const [materiales, setMateriales] = useState([])
   const [completadas, setCompletadas] = useState([])
+  const [matricula, setMatricula] = useState(null)
+  const [califs, setCalifs] = useState([])
+  const [registrando, setRegistrando] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [msg, setMsg] = useState('')
@@ -60,6 +77,10 @@ const CourseDetail = () => {
       getProgreso(id)
         .then((p) => setCompletadas((p.lecciones_completadas || []).filter((x) => x.completada).map((x) => x.id_leccion)))
         .catch(() => setCompletadas([]))
+      getMisCursos()
+        .then((list) => setMatricula(list.find((m) => Number(m.ID_CURSO) === Number(id)) || null))
+        .catch(() => setMatricula(null))
+      getCalificaciones().then(setCalifs).catch(() => setCalifs([]))
     }
   }, [id, isAuthenticated])
 
@@ -72,21 +93,48 @@ const CourseDetail = () => {
     return map
   }, [materiales])
 
+  const estaMatriculado = !!matricula
+  const idMatricula = matricula?.ID_MATRICULA
+  const quiz = QUIZZES[Number(id)]
+  const hayQuiz = !!quiz
+  const yaCalificado = !!curso && califs.some((c) => c.CURSO === curso.TITULO)
   const pct = lecciones.length ? Math.round((completadas.length / lecciones.length) * 100) : 0
+  const completo = lecciones.length > 0 && completadas.length === lecciones.length
+
+  const completarCurso = async (nota) => {
+    if (!estaMatriculado || !idMatricula || registrando || yaCalificado) return
+    setRegistrando(true)
+    try {
+      await crearCalificacion({ id_matricula: idMatricula, nota, comentario: 'Curso completado en Acadia' })
+      if (matricula.ESTADO !== 'COMPLETADO') {
+        await actualizarEstadoMatricula(idMatricula, 'COMPLETADO').catch(() => {})
+      }
+      const fresh = await getCalificaciones().catch(() => califs)
+      setCalifs(fresh)
+      setMatricula((m) => (m ? { ...m, ESTADO: 'COMPLETADO' } : m))
+      setMsg(`¡Curso completado! Tu nota (${nota}/20) quedó registrada.`)
+    } catch (err) {
+      setMsg(err.response?.data?.error || 'No se pudo registrar tu nota')
+    } finally {
+      setRegistrando(false)
+    }
+  }
 
   const handleMatricula = async () => {
     if (!isAuthenticated) return navigate('/login')
     setMsg('')
     try {
       await matricularse(Number(id))
-      setMsg('¡Te matriculaste correctamente!')
+      const list = await getMisCursos().catch(() => [])
+      setMatricula(list.find((m) => Number(m.ID_CURSO) === Number(id)) || null)
+      setMsg('¡Te matriculaste correctamente! Ya puedes acceder al contenido.')
     } catch (err) {
       setMsg(err.response?.data?.error || 'No se pudo completar la matrícula')
     }
   }
 
   const toggleLeccion = async (idLeccion) => {
-    if (!isAuthenticated) return navigate('/login')
+    if (!estaMatriculado) { setMsg('Matricúlate para registrar tu progreso.'); return }
     const previo = completadas
     const next = completadas.includes(idLeccion)
       ? completadas.filter((x) => x !== idLeccion)
@@ -102,6 +150,7 @@ const CourseDetail = () => {
           fecha_completada: new Date().toISOString(),
         })),
       })
+      if (nuevoPct === 100 && !hayQuiz && !yaCalificado) completarCurso(NOTA_POR_DEFECTO)
     } catch {
       setCompletadas(previo)
       setMsg('No se pudo actualizar tu progreso')
@@ -112,7 +161,7 @@ const CourseDetail = () => {
   if (error) return <Layout><p className="acd-error">{error}</p></Layout>
   if (!curso) return null
 
-  const heroImg = courseImage(curso.ID_CURSO)
+  const heroImg = courseImage(curso.ID_CURSO, curso.CATEGORIA, curso.TITULO)
 
   return (
     <Layout>
@@ -134,9 +183,13 @@ const CourseDetail = () => {
               <span className="detail__price">S/ {Number(curso.PRECIO).toFixed(2)}</span>
             </div>
             <div className="detail__actions">
-              <button type="button" className="acd-btn acd-btn--primary" onClick={handleMatricula}>
-                Matricularme
-              </button>
+              {estaMatriculado ? (
+                <span className="detail__enrolled"><IconCheckCircle width={18} height={18} /> Ya estás matriculado</span>
+              ) : (
+                <button type="button" className="acd-btn acd-btn--primary" onClick={handleMatricula}>
+                  Matricularme
+                </button>
+              )}
               <button
                 type="button"
                 className="acd-btn acd-btn--ghost"
@@ -157,13 +210,29 @@ const CourseDetail = () => {
           )}
         </div>
 
-        {isAuthenticated && lecciones.length > 0 && (
+        {isAuthenticated && !estaMatriculado && (
+          <div className="detail__lock">
+            <span className="detail__lock-ic"><IconLock width={20} height={20} /></span>
+            <div className="detail__lock-text">
+              <p className="detail__lock-title">Contenido bloqueado</p>
+              <p className="detail__lock-sub">Matricúlate para acceder a las lecciones, materiales y la evaluación final.</p>
+            </div>
+            <button type="button" className="acd-btn acd-btn--primary" onClick={handleMatricula}>
+              Matricúlate para acceder
+            </button>
+          </div>
+        )}
+
+        {estaMatriculado && lecciones.length > 0 && (
           <div className="detail__progress">
             <div className="detail__progress-head">
               <span className="detail__progress-title">Tu progreso</span>
               <span className="detail__progress-text">{completadas.length} de {lecciones.length} lecciones completadas</span>
             </div>
             <ProgressBar value={pct} />
+            {completo && hayQuiz && !yaCalificado && (
+              <p className="detail__quiz-hint"><IconQuiz width={15} height={15} /> Completaste las lecciones. Rinde el quiz final para obtener tu nota.</p>
+            )}
           </div>
         )}
 
@@ -181,13 +250,13 @@ const CourseDetail = () => {
                     <p className="lesson-item__desc">{lec.DESCRIPCION}</p>
                     {mats.length > 0 && (
                       <div className="lesson-item__materials">
-                        {mats.map((m) => <MaterialChip key={m._id} material={m} />)}
+                        {mats.map((m) => <MaterialChip key={m._id} material={m} locked={!estaMatriculado} />)}
                       </div>
                     )}
                   </div>
                   <div className="lesson-item__aside">
                     <span className="lesson-item__dur">{lec.DURACION_MIN} min</span>
-                    {isAuthenticated && (
+                    {estaMatriculado && (
                       <button
                         type="button"
                         className={`lesson-check${done ? ' lesson-check--done' : ''}`}
@@ -203,6 +272,10 @@ const CourseDetail = () => {
             {lecciones.length === 0 && <p className="page-empty">Este curso aún no tiene lecciones.</p>}
           </ol>
         </section>
+
+        {estaMatriculado && hayQuiz && (
+          <Quiz quiz={quiz} yaAprobado={yaCalificado} onAprobado={(nota) => completarCurso(nota)} />
+        )}
       </div>
     </Layout>
   )

@@ -1,5 +1,4 @@
 import Layout from '../components/ui/Layout'
-import Breadcrumb from '../components/ui/Breadcrumb'
 import Avatar from '../components/ui/Avatar'
 import { useAuth } from '../context/AuthContext'
 import { IconProfile, IconMail } from '../components/ui/Icons'
@@ -10,8 +9,6 @@ const Perfil = () => {
 
   return (
     <Layout>
-      <Breadcrumb items={[{ label: 'Inicio', to: '/dashboard' }, { label: 'Perfil' }]} />
-
       <header className="page-head">
         <div>
           <h1 className="page-head__title">Mi perfil</h1>

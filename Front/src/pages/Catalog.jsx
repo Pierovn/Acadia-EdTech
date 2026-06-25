@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import Layout from '../components/ui/Layout'
-import Breadcrumb from '../components/ui/Breadcrumb'
 import CourseCard from '../components/ui/CourseCard'
 import Spinner from '../components/ui/Spinner'
 import EmptyState from '../components/ui/EmptyState'
@@ -37,8 +36,6 @@ const Catalog = () => {
 
   return (
     <Layout>
-      <Breadcrumb items={[{ label: 'Inicio', to: '/dashboard' }, { label: 'Cursos' }]} />
-
       <header className="page-head">
         <div>
           <h1 className="page-head__title">Catálogo de Cursos</h1>

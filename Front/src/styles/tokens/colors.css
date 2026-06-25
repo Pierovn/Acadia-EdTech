@@ -4,24 +4,24 @@
      Estos son los tokens canónicos. Usar SIEMPRE estos en código nuevo.
      =================================================================== */
 
-  /* Fondos */
-  --bg-page: #F1EEE8;
-  --bg-card: #FDFDFD;
-  --bg-soft: #F5F6F4;
+  /* Fondos (cálidos, base crema) */
+  --bg-page: #F4EEE3;
+  --bg-card: #FFFCF7;
+  --bg-soft: #F1E9DC;
 
   /* Bordes */
-  --border-light: #DEDCD8;
-  --border-medium: #C8C7C5;
+  --border-light: #E3DACB;
+  --border-medium: #CFC4B2;
 
-  /* Marca — identidad visual Acadia (amarillos) */
+  /* Marca — identidad visual Acadia (naranjas del logo) */
   --primary: #FBDEA3;
   --primary-light: #F6C68A;
   --primary-dark: #DF9F52;
 
-  /* Textos */
-  --text-primary: #221E3A;
-  --text-secondary: #7A6E6A;
-  --text-muted: #A9A8A8;
+  /* Textos (espresso cálido, NO azul) */
+  --text-primary: #2A2018;
+  --text-secondary: #7A6A5C;
+  --text-muted: #A89C8D;
 
   /* Tarjetas de cursos destacados */
   --course-yellow: #F6C68A;

@@ -54,6 +54,11 @@
   color: var(--text-muted);
 }
 
+.badge--warning {
+  background-color: #F7E8D0;
+  color: #B5701F;
+}
+
 /* ===== Avatar ===== */
 .avatar {
   display: inline-grid;

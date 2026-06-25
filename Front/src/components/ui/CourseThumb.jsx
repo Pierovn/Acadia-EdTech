@@ -5,7 +5,7 @@ import { courseImage } from './courseImages'
 // si no, cae a un color sólido por categoría + ícono de categoría.
 // size: 'card' (catálogo, vertical) | 'row' (lista, compacto)
 const CourseThumb = ({ idCurso, categoria, titulo, size = 'card' }) => {
-  const img = courseImage(idCurso)
+  const img = courseImage(idCurso, categoria, titulo)
 
   if (img) {
     return (

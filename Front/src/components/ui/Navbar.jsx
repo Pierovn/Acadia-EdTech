@@ -1,9 +1,10 @@
+import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import Avatar from './Avatar'
 import {
   IconDashboard, IconProfile, IconCourses, IconForum,
-  IconSettings, IconLogout, IconCertificate, IconCreditCard,
+  IconSettings, IconLogout, IconCertificate, IconCreditCard, IconChevron,
 } from './Icons'
 import logoAcadia from '../../assets/logo-acadia.png'
 
@@ -27,9 +28,22 @@ const grupos = [
   },
 ]
 
+const readCollapsed = () => {
+  try { return localStorage.getItem('acd-sidebar-collapsed') === '1' } catch { return false }
+}
+
 const Navbar = () => {
   const { usuario, logout } = useAuth()
   const navigate = useNavigate()
+  const [collapsed, setCollapsed] = useState(readCollapsed)
+
+  const toggle = () => {
+    setCollapsed((c) => {
+      const next = !c
+      try { localStorage.setItem('acd-sidebar-collapsed', next ? '1' : '0') } catch { /* noop */ }
+      return next
+    })
+  }
 
   const handleLogout = () => {
     logout()
@@ -39,9 +53,20 @@ const Navbar = () => {
   const nombre = usuario?.email ? usuario.email.split('@')[0] : 'Invitado'
 
   return (
-    <aside className="sidebar">
+    <aside className={collapsed ? 'sidebar sidebar--collapsed' : 'sidebar'}>
+      <button
+        type="button"
+        className="sidebar__toggle"
+        onClick={toggle}
+        aria-label={collapsed ? 'Expandir menú' : 'Contraer menú'}
+      >
+        <IconChevron width={15} height={15} />
+      </button>
+
       <div className="sidebar__brand">
-        <img src={logoAcadia} alt="Acadia" className="sidebar__logo" />
+        <span className="sidebar__logo-chip">
+          <img src={logoAcadia} alt="Acadia" className="sidebar__logo" />
+        </span>
       </div>
 
       <nav className="sidebar__nav">
@@ -52,6 +77,7 @@ const Navbar = () => {
               <NavLink
                 key={to}
                 to={to}
+                title={collapsed ? label : undefined}
                 className={({ isActive }) =>
                   isActive ? 'sidebar__link sidebar__link--active' : 'sidebar__link'
                 }
@@ -75,9 +101,9 @@ const Navbar = () => {
           </span>
         </div>
 
-        <button type="button" className="sidebar__logout" onClick={handleLogout}>
+        <button type="button" className="sidebar__logout" onClick={handleLogout} title="Cerrar sesión">
           <IconLogout className="sidebar__icon" width={18} height={18} />
-          <span>Cerrar sesión</span>
+          <span className="sidebar__label">Cerrar sesión</span>
         </button>
       </div>
     </aside>

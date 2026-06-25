@@ -5,8 +5,8 @@ const PALETTE = [
   'var(--course-orange)',
   'var(--course-pink)',
   'var(--primary-light)',
-  '#BBD4C2',
-  '#C9C2E6',
+  'var(--primary)',
+  'var(--primary-dark)',
 ]
 
 const pickColor = (key = '') => {

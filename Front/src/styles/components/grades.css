@@ -17,6 +17,27 @@
   box-shadow: var(--shadow-soft);
 }
 
+.grades-stat {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.grades-stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--primary-dark);
+}
+
+.grades-stat--amber::before { background-color: var(--primary-dark); }
+.grades-stat--orange::before { background-color: var(--course-orange); }
+.grades-stat--green::before { background-color: var(--success); }
+.grades-stat--gold::before { background-color: var(--primary-light); }
+
 .grades-stat__value {
   font-size: var(--fs-2xl);
   font-weight: var(--fw-bold);
@@ -28,6 +49,8 @@
   font-size: var(--fs-sm);
   color: var(--text-secondary);
 }
+
+.grades-chart { margin-bottom: var(--space-6); }
 
 .grades-list {
   display: flex;
