@@ -14,6 +14,7 @@ import { IconCourses, IconCertificate, IconClock, IconChevron, IconStar } from '
 import { getMisCursos } from '../services/matriculas.service'
 import { getProgreso } from '../services/progreso.service'
 import { getCalificaciones } from '../services/calificaciones.service'
+import { abreviar } from '../data/cursos'
 import { useAuth } from '../context/AuthContext'
 
 const novedades = [
@@ -35,8 +36,6 @@ const CHART = {
   bar: '#DF9F52',
   axis: '#7A6A5C',
 }
-
-const corto = (t = '') => (t.length > 18 ? `${t.slice(0, 17)}…` : t)
 
 const Dashboard = () => {
   const { usuario } = useAuth()
@@ -107,7 +106,7 @@ const Dashboard = () => {
   const barData = useMemo(
     () => [...cursos]
       .sort((a, b) => (b.progreso || 0) - (a.progreso || 0))
-      .map((c) => ({ name: corto(c.CURSO), progreso: c.progreso || 0 })),
+      .map((c) => ({ name: abreviar(c.CURSO), progreso: c.progreso || 0 })),
     [cursos]
   )
 
@@ -168,120 +167,133 @@ const Dashboard = () => {
             ))}
           </motion.div>
 
-          <div className="dash-grid">
-            <div className="dash-main">
-              <motion.div
-                className="chart-card"
-                initial={{ opacity: 0, y: reduce ? 0 : 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.08 }}
-              >
-                <h3 className="chart-card__title">Tu progreso por curso</h3>
-                {barData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={Math.max(170, barData.length * 52)}>
-                    <BarChart data={barData} layout="vertical" margin={{ left: 4, right: 24, top: 4, bottom: 4 }}>
+          <div className="dash-charts">
+            <motion.div
+              className="chart-card chart-card--chart"
+              initial={{ opacity: 0, y: reduce ? 0 : 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.08 }}
+            >
+              <h3 className="chart-card__title">Tu progreso por curso</h3>
+              {barData.length > 0 ? (
+                <div className="chart-card__plot">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={barData} layout="vertical" margin={{ left: 4, right: 48, top: 4, bottom: 4 }}>
                       <XAxis type="number" domain={[0, 100]} hide />
                       <YAxis
                         type="category"
                         dataKey="name"
-                        width={140}
-                        tick={{ fontSize: 12, fill: CHART.axis }}
+                        width={120}
+                        tick={{ fontSize: 13, fill: '#2A2018' }}
                         axisLine={false}
                         tickLine={false}
                       />
                       <Tooltip formatter={(v) => [`${v}%`, 'Avance']} cursor={{ fill: 'rgba(42,32,24,0.04)' }} />
-                      <Bar dataKey="progreso" fill={CHART.bar} radius={[0, 8, 8, 0]} barSize={18} />
+                      <Bar
+                        dataKey="progreso"
+                        fill={CHART.bar}
+                        radius={[0, 8, 8, 0]}
+                        barSize={20}
+                        label={{ position: 'right', fill: '#7A6A5C', fontSize: 12, fontWeight: 600, formatter: (v) => `${v}%` }}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
-                ) : (
-                  <p className="chart-card__empty">Matricúlate en un curso para ver tu progreso.</p>
-                )}
-              </motion.div>
+                </div>
+              ) : (
+                <p className="chart-card__empty">Matricúlate en un curso para ver tu progreso.</p>
+              )}
+            </motion.div>
 
-              <motion.section
-                className="dash-courses"
-                initial={{ opacity: 0, y: reduce ? 0 : 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.14 }}
-              >
-                <h2 className="dashboard__section-title">Continuar aprendiendo</h2>
-                {continuar.length > 0 ? (
-                  <div className="dashboard__courses">
-                    {continuar.map((c) => (
-                      <article key={c.ID_MATRICULA} className="mycourse">
-                        <CourseThumb idCurso={c.ID_CURSO} categoria={c.CATEGORIA} titulo={c.CURSO} size="row" />
-                        <div className="mycourse__main">
-                          <div className="mycourse__top">
-                            <h4 className="mycourse__title">{c.CURSO}</h4>
-                            <Badge variant={estadoVariant(c.ESTADO)}>{c.ESTADO}</Badge>
-                          </div>
-                          <p className="mycourse__meta">{c.CATEGORIA} · {c.NIVEL}</p>
-                          <ProgressBar value={c.progreso} />
-                        </div>
-                        <button
-                          type="button"
-                          className="mycourse__cta"
-                          onClick={() => navigate(`/cursos/${c.ID_CURSO}`)}
-                        >
-                          Continuar <IconChevron width={16} height={16} />
-                        </button>
-                      </article>
-                    ))}
+            <motion.div
+              className="chart-card"
+              initial={{ opacity: 0, y: reduce ? 0 : 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.08 }}
+            >
+              <h3 className="chart-card__title">Distribución de tus cursos</h3>
+              {chart.length > 0 ? (
+                <>
+                  <div className="chart-card__wrap">
+                    <ResponsiveContainer width="100%" height={190}>
+                      <PieChart>
+                        <Pie data={chart} dataKey="value" nameKey="name" innerRadius={58} outerRadius={82} paddingAngle={3} stroke="none">
+                          {chart.map((d) => <Cell key={d.name} fill={d.color} />)}
+                        </Pie>
+                        <Tooltip formatter={(v, n) => [`${v} curso${v === 1 ? '' : 's'}`, n]} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div className="chart-card__center">
+                      <span className="chart-card__total">{cursos.length}</span>
+                      <span className="chart-card__total-label">cursos</span>
+                    </div>
                   </div>
-                ) : (
-                  <EmptyState
-                    icon={IconCourses}
-                    title="Aún no tienes cursos"
-                    message="Explora el catálogo y matricúlate en tu primer curso para empezar a aprender."
-                    action={
-                      <button type="button" className="acd-btn acd-btn--primary" onClick={() => navigate('/catalog')}>
-                        Ver catálogo
+                  <ul className="chart-legend">
+                    {chart.map((d) => (
+                      <li key={d.name} className="chart-legend__item">
+                        <span className="chart-legend__dot" style={{ backgroundColor: d.color }} />
+                        <span className="chart-legend__name">{d.name}</span>
+                        <span className="chart-legend__value">{d.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <p className="chart-card__empty">Matricúlate en un curso para ver tu distribución.</p>
+              )}
+            </motion.div>
+          </div>
+
+          <div className="dash-grid">
+            <motion.section
+              className="dash-courses"
+              initial={{ opacity: 0, y: reduce ? 0 : 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.16 }}
+            >
+              <h2 className="dashboard__section-title">Continuar aprendiendo</h2>
+              {continuar.length > 0 ? (
+                <div className="dashboard__courses">
+                  {continuar.map((c) => (
+                    <article key={c.ID_MATRICULA} className="mycourse">
+                      <CourseThumb idCurso={c.ID_CURSO} categoria={c.CATEGORIA} titulo={c.CURSO} size="row" />
+                      <div className="mycourse__main">
+                        <div className="mycourse__top">
+                          <h4 className="mycourse__title">{c.CURSO}</h4>
+                          <Badge variant={estadoVariant(c.ESTADO)}>{c.ESTADO}</Badge>
+                        </div>
+                        <p className="mycourse__meta">{c.CATEGORIA} · {c.NIVEL}</p>
+                        <ProgressBar value={c.progreso} />
+                      </div>
+                      <button
+                        type="button"
+                        className="mycourse__cta"
+                        onClick={() => navigate(`/cursos/${c.ID_CURSO}`)}
+                      >
+                        Continuar <IconChevron width={16} height={16} />
                       </button>
-                    }
-                  />
-                )}
-              </motion.section>
-            </div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <EmptyState
+                  icon={IconCourses}
+                  title="Aún no tienes cursos"
+                  message="Explora el catálogo y matricúlate en tu primer curso para empezar a aprender."
+                  action={
+                    <button type="button" className="acd-btn acd-btn--primary" onClick={() => navigate('/catalog')}>
+                      Ver catálogo
+                    </button>
+                  }
+                />
+              )}
+            </motion.section>
 
             <motion.aside
               className="dash-side"
               initial={{ opacity: 0, y: reduce ? 0 : 18 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.22 }}
             >
-              <div className="chart-card">
-                <h3 className="chart-card__title">Distribución de tus cursos</h3>
-                {chart.length > 0 ? (
-                  <>
-                    <div className="chart-card__wrap">
-                      <ResponsiveContainer width="100%" height={190}>
-                        <PieChart>
-                          <Pie data={chart} dataKey="value" nameKey="name" innerRadius={58} outerRadius={82} paddingAngle={3} stroke="none">
-                            {chart.map((d) => <Cell key={d.name} fill={d.color} />)}
-                          </Pie>
-                          <Tooltip formatter={(v, n) => [`${v} curso${v === 1 ? '' : 's'}`, n]} />
-                        </PieChart>
-                      </ResponsiveContainer>
-                      <div className="chart-card__center">
-                        <span className="chart-card__total">{cursos.length}</span>
-                        <span className="chart-card__total-label">cursos</span>
-                      </div>
-                    </div>
-                    <ul className="chart-legend">
-                      {chart.map((d) => (
-                        <li key={d.name} className="chart-legend__item">
-                          <span className="chart-legend__dot" style={{ backgroundColor: d.color }} />
-                          <span className="chart-legend__name">{d.name}</span>
-                          <span className="chart-legend__value">{d.value}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                ) : (
-                  <p className="chart-card__empty">Matricúlate en un curso para ver tu distribución.</p>
-                )}
-              </div>
-
               <div className="news-card">
                 <h3 className="news-card__title">Novedades</h3>
                 <ul className="news-card__list">

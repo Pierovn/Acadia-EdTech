@@ -148,6 +148,33 @@
   color: var(--primary-dark);
 }
 
+.detail__exam {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: linear-gradient(120deg, var(--primary-soft), var(--bg-card));
+  border: 1px solid var(--primary-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-soft);
+  flex-wrap: wrap;
+}
+
+.detail__exam-ic {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-card);
+  color: var(--primary-dark);
+  flex-shrink: 0;
+}
+
+.detail__exam-text { flex: 1; min-width: 200px; }
+.detail__exam-title { font-weight: var(--fw-semibold); color: var(--text-primary); }
+.detail__exam-sub { font-size: var(--fs-sm); color: var(--text-secondary); }
+
 .material-chip--locked {
   color: var(--text-muted);
   background-color: var(--bg-soft);

@@ -1,14 +1,14 @@
 import { useMemo, useState } from 'react'
 import { useLocation, useNavigate, Link } from 'react-router-dom'
+import { motion, useReducedMotion } from 'framer-motion'
 import Layout from '../components/ui/Layout'
-import Breadcrumb from '../components/ui/Breadcrumb'
 import { crearSuscripcion } from '../services/suscripciones.service'
 import { IconCreditCard, IconSmartphone, IconShieldLock, IconCheckCircle, IconCheck } from '../components/ui/Icons'
 
 const PLANES = [
   { id: 'MENSUAL', nombre: 'Plan Mensual', monto: 29.9, periodo: '/ mes', desc: 'Acceso completo a todos los cursos durante 30 días.' },
-  { id: 'ANUAL', nombre: 'Plan Anual', monto: 299, periodo: '/ año', desc: 'Doce meses de acceso ilimitado con el mejor precio.', destacado: true },
-  { id: 'UNICO', nombre: 'Pago Único', monto: 199, periodo: 'una vez', desc: 'Acceso de por vida a la plataforma, sin renovaciones.' },
+  { id: 'ANUAL', nombre: 'Plan Anual', monto: 299, periodo: '/ año', desc: 'Doce meses de acceso ilimitado con el mejor precio.' },
+  { id: 'UNICO', nombre: 'Pago Único', monto: 199, periodo: 'una vez', desc: 'Acceso de por vida a la plataforma, sin renovaciones.', oferta: true },
 ]
 
 const METODOS = [
@@ -21,6 +21,7 @@ const soloDigitos = (v, max) => v.replace(/\D/g, '').slice(0, max)
 
 const Checkout = () => {
   const navigate = useNavigate()
+  const reduce = useReducedMotion()
   const { state } = useLocation()
   const compra = state && state.titulo ? state : null
 
@@ -59,12 +60,21 @@ const Checkout = () => {
     }
   }
 
+  const planContainer = { hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } } }
+  const planItem = { hidden: { opacity: 0, y: reduce ? 0 : 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } } }
+
   if (confirmado) {
     return (
       <Layout>
-        <Breadcrumb items={[{ label: 'Inicio', to: '/dashboard' }, { label: 'Pago' }, { label: 'Confirmación' }]} />
-        <div className="pay-success">
-          <span className="pay-success__icon"><IconCheckCircle width={38} height={38} /></span>
+        <motion.div className="pay-success" initial={{ opacity: 0, y: reduce ? 0 : 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+          <motion.span
+            className="pay-success__icon"
+            initial={{ scale: reduce ? 1 : 0.4, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.1, type: 'spring', stiffness: 200, damping: 14 }}
+          >
+            <IconCheckCircle width={38} height={38} />
+          </motion.span>
           <h1 className="pay-success__title">¡Pago confirmado!</h1>
           <p className="pay-success__text">
             {compra
@@ -78,15 +88,13 @@ const Checkout = () => {
             </button>
             <Link to="/catalog" className="acd-btn acd-btn--ghost">Seguir explorando</Link>
           </div>
-        </div>
+        </motion.div>
       </Layout>
     )
   }
 
   return (
     <Layout>
-      <Breadcrumb items={[{ label: 'Inicio', to: '/dashboard' }, { label: 'Cursos', to: '/catalog' }, { label: 'Pago' }]} />
-
       <header className="page-head">
         <div>
           <h1 className="page-head__title">{compra ? 'Comprar curso' : 'Suscríbete a Acadia'}</h1>
@@ -94,7 +102,7 @@ const Checkout = () => {
         </div>
       </header>
 
-      <div className="checkout">
+      <motion.div className="checkout" initial={{ opacity: 0, y: reduce ? 0 : 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
         <section className="checkout__plans">
           {compra ? (
             <div className="order-summary">
@@ -108,23 +116,25 @@ const Checkout = () => {
           ) : (
             <>
               <h2 className="checkout__section-title">Elige tu plan</h2>
-              <div className="plan-grid">
+              <motion.div className="plan-grid" variants={planContainer} initial="hidden" animate="show">
                 {PLANES.map((p) => (
-                  <button
+                  <motion.button
                     key={p.id}
                     type="button"
-                    className={`plan-option${plan === p.id ? ' plan-option--active' : ''}`}
+                    variants={planItem}
+                    whileHover={reduce ? undefined : { y: -4 }}
+                    className={`plan-option${plan === p.id ? ' plan-option--active' : ''}${p.oferta ? ' plan-option--wide plan-option--featured' : ''}`}
                     onClick={() => setPlan(p.id)}
                   >
-                    {p.destacado && <span className="plan-option__flag">Recomendado</span>}
+                    {p.oferta && <span className="plan-option__flag">Mejor precio</span>}
                     <span className="plan-option__name">{p.nombre}</span>
                     <span className="plan-option__price">
                       S/ {p.monto.toFixed(2)} <span className="plan-option__period">{p.periodo}</span>
                     </span>
                     <span className="plan-option__desc">{p.desc}</span>
-                  </button>
+                  </motion.button>
                 ))}
-              </div>
+              </motion.div>
             </>
           )}
         </section>
@@ -235,7 +245,7 @@ const Checkout = () => {
             </p>
           </form>
         </aside>
-      </div>
+      </motion.div>
     </Layout>
   )
 }

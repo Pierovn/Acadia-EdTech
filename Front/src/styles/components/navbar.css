@@ -7,10 +7,8 @@
 .layout__main {
   flex: 1;
   min-width: 0;
-  padding: var(--space-6) var(--space-7);
-  max-width: var(--content-max);
-  margin: 0 auto;
   width: 100%;
+  padding: clamp(var(--space-5), 2.4vw, var(--space-8)) clamp(var(--space-5), 3vw, var(--space-8));
   animation: acd-fade-in var(--transition-base);
 }
 

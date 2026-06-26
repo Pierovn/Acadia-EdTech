@@ -26,7 +26,7 @@
 
 .checkout {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 400px;
   gap: var(--space-6);
   align-items: start;
 }
@@ -45,7 +45,7 @@
 
 .plan-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
 }
 
@@ -67,6 +67,17 @@
 .plan-option:hover {
   border-color: var(--primary-light);
   transform: translateY(-2px);
+}
+
+.plan-option--featured {
+  border-color: var(--primary-dark);
+  background: linear-gradient(160deg, var(--primary-soft), var(--bg-card));
+}
+
+.plan-option--wide {
+  grid-column: 1 / -1;
+  align-items: center;
+  text-align: center;
 }
 
 .plan-option--active {
@@ -146,13 +157,13 @@
   background-color: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  padding: var(--space-6);
   box-shadow: var(--shadow-soft);
   position: sticky;
   top: var(--space-6);
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-5);
 }
 
 .pay-methods {

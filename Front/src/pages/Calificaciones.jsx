@@ -9,6 +9,7 @@ import EmptyState from '../components/ui/EmptyState'
 import CountUp from '../components/ui/CountUp'
 import { IconCertificate } from '../components/ui/Icons'
 import { getCalificaciones } from '../services/calificaciones.service'
+import { abreviar } from '../data/cursos'
 
 const REND = {
   EXCELENTE: { variant: 'success', color: '#5C8A6A' },
@@ -18,7 +19,6 @@ const REND = {
 }
 
 const AXIS = '#7A6A5C'
-const corto = (t = '') => (t.length > 20 ? `${t.slice(0, 19)}…` : t)
 
 const formatFecha = (f) => {
   if (!f) return ''
@@ -52,7 +52,7 @@ const Calificaciones = () => {
   const barData = useMemo(
     () => [...items]
       .sort((a, b) => Number(b.NOTA) - Number(a.NOTA))
-      .map((c) => ({ name: corto(c.CURSO), nota: Number(c.NOTA), color: (REND[c.RENDIMIENTO] || REND.APROBADO).color })),
+      .map((c) => ({ name: abreviar(c.CURSO), nota: Number(c.NOTA), color: (REND[c.RENDIMIENTO] || REND.APROBADO).color })),
     [items]
   )
 
@@ -101,19 +101,24 @@ const Calificaciones = () => {
 
             <div className="chart-card grades-chart">
               <h3 className="chart-card__title">Tu desempeño por curso</h3>
-              <ResponsiveContainer width="100%" height={Math.max(180, barData.length * 48)}>
-                <BarChart data={barData} layout="vertical" margin={{ left: 4, right: 28, top: 4, bottom: 4 }}>
+              <ResponsiveContainer width="100%" height={Math.max(180, barData.length * 56)}>
+                <BarChart data={barData} layout="vertical" margin={{ left: 4, right: 48, top: 4, bottom: 4 }}>
                   <XAxis type="number" domain={[0, 20]} hide />
                   <YAxis
                     type="category"
                     dataKey="name"
-                    width={150}
-                    tick={{ fontSize: 12, fill: AXIS }}
+                    width={120}
+                    tick={{ fontSize: 13, fill: '#2A2018' }}
                     axisLine={false}
                     tickLine={false}
                   />
                   <Tooltip formatter={(v) => [`${v}/20`, 'Nota']} cursor={{ fill: 'rgba(42,32,24,0.04)' }} />
-                  <Bar dataKey="nota" radius={[0, 8, 8, 0]} barSize={18}>
+                  <Bar
+                    dataKey="nota"
+                    radius={[0, 8, 8, 0]}
+                    barSize={20}
+                    label={{ position: 'right', fill: AXIS, fontSize: 12, fontWeight: 600, formatter: (v) => `${v}/20` }}
+                  >
                     {barData.map((d) => <Cell key={d.name} fill={d.color} />)}
                   </Bar>
                 </BarChart>

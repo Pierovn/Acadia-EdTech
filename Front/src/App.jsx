@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Catalog from './pages/Catalog'
 import CourseDetail from './pages/CourseDetail'
+import QuizPage from './pages/QuizPage'
 import Dashboard from './pages/Dashboard'
 import Forum from './pages/Forum'
 import ForumHome from './pages/ForumHome'
@@ -26,6 +27,14 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/cursos/:id" element={<CourseDetail />} />
+          <Route
+            path="/cursos/:id/quiz"
+            element={
+              <ProtectedRoute>
+                <QuizPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/foro" element={<ForumHome />} />
           <Route
             path="/dashboard"

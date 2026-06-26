@@ -4,7 +4,6 @@ import Layout from '../components/ui/Layout'
 import Breadcrumb from '../components/ui/Breadcrumb'
 import Spinner from '../components/ui/Spinner'
 import ProgressBar from '../components/ui/ProgressBar'
-import Quiz from '../components/ui/Quiz'
 import { getCursoById, getLecciones } from '../services/cursos.service'
 import { matricularse, getMisCursos, actualizarEstadoMatricula } from '../services/matriculas.service'
 import { getMaterialesPorCurso } from '../services/materiales.service'
@@ -17,7 +16,7 @@ import {
   IconClock, IconForum, IconCreditCard, IconCheck, IconPlay, IconDoc, IconQuiz, IconLock, IconCheckCircle,
 } from '../components/ui/Icons'
 
-const NOTA_POR_DEFECTO = 15
+const NOTA_POR_DEFECTO = 20
 
 const MATERIAL_META = {
   video: { Icon: IconPlay, label: 'Video' },
@@ -230,9 +229,6 @@ const CourseDetail = () => {
               <span className="detail__progress-text">{completadas.length} de {lecciones.length} lecciones completadas</span>
             </div>
             <ProgressBar value={pct} />
-            {completo && hayQuiz && !yaCalificado && (
-              <p className="detail__quiz-hint"><IconQuiz width={15} height={15} /> Completaste las lecciones. Rinde el quiz final para obtener tu nota.</p>
-            )}
           </div>
         )}
 
@@ -274,7 +270,31 @@ const CourseDetail = () => {
         </section>
 
         {estaMatriculado && hayQuiz && (
-          <Quiz quiz={quiz} yaAprobado={yaCalificado} onAprobado={(nota) => completarCurso(nota)} />
+          <section className="detail__exam">
+            <span className="detail__exam-ic"><IconQuiz width={22} height={22} /></span>
+            <div className="detail__exam-text">
+              <h3 className="detail__exam-title">Evaluación final</h3>
+              <p className="detail__exam-sub">
+                {yaCalificado
+                  ? 'Ya aprobaste esta evaluación. Tu nota está en tus calificaciones.'
+                  : completo
+                    ? 'Completaste las lecciones. Rinde el quiz para obtener tu nota y terminar el curso.'
+                    : 'Completa todas las lecciones para desbloquear la evaluación final.'}
+              </p>
+            </div>
+            {yaCalificado ? (
+              <span className="detail__enrolled"><IconCheckCircle width={18} height={18} /> Aprobado</span>
+            ) : (
+              <button
+                type="button"
+                className="acd-btn acd-btn--primary"
+                disabled={!completo}
+                onClick={() => navigate(`/cursos/${id}/quiz`)}
+              >
+                Rendir evaluación final
+              </button>
+            )}
+          </section>
         )}
       </div>
     </Layout>
