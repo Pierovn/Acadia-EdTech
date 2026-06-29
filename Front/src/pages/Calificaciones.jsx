@@ -18,7 +18,7 @@ const REND = {
   DESAPROBADO: { variant: 'danger', color: '#C76B5E' },
 }
 
-const AXIS = '#7A6A5C'
+const AXIS = '#66726B'
 
 const formatFecha = (f) => {
   if (!f) return ''
@@ -108,11 +108,11 @@ const Calificaciones = () => {
                     type="category"
                     dataKey="name"
                     width={120}
-                    tick={{ fontSize: 13, fill: '#2A2018' }}
+                    tick={{ fontSize: 13, fill: '#16231B' }}
                     axisLine={false}
                     tickLine={false}
                   />
-                  <Tooltip formatter={(v) => [`${v}/20`, 'Nota']} cursor={{ fill: 'rgba(42,32,24,0.04)' }} />
+                  <Tooltip formatter={(v) => [`${v}/20`, 'Nota']} cursor={{ fill: 'rgba(16,40,28,0.05)' }} />
                   <Bar
                     dataKey="nota"
                     radius={[0, 8, 8, 0]}

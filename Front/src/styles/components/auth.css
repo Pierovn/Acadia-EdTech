@@ -1,35 +1,71 @@
+/* ===================================================================
+   Login / Registro — container blanco 50/50 sobre fondo verde con blur
+   =================================================================== */
 .auth {
-  height: 100vh;
-  height: 100dvh;
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: clamp(var(--space-4), 3vw, var(--space-7));
+  background:
+    radial-gradient(75% 95% at 85% 85%, rgba(64, 160, 99, 0.50) 0%, transparent 55%),
+    linear-gradient(150deg, #1B6747 0%, #238A57 48%, #155A3C 100%);
+  overflow: hidden;
+}
+
+/* Resplandor verde difuminado de fondo (el "blur" sutil) */
+.auth::before {
+  content: '';
+  position: absolute;
+  inset: -15%;
+  background:
+    radial-gradient(circle at 18% 26%, rgba(150, 222, 120, 0.42), transparent 42%),
+    radial-gradient(circle at 84% 74%, rgba(74, 180, 110, 0.40), transparent 44%);
+  filter: blur(80px);
+  z-index: 0;
+}
+
+/* Container blanco grande que casi llena la pantalla */
+.auth__card {
+  position: relative;
+  z-index: 1;
+  width: min(2100px, 90vw);
+  height: min(1180px, 88vh);
   display: grid;
   grid-template-columns: 1fr 1fr;
   background-color: var(--bg-card);
+  border-radius: var(--radius-xl);
   overflow: hidden;
+  box-shadow: 0 30px 80px rgba(6, 26, 18, 0.45);
 }
 
 .auth__panel {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: clamp(var(--space-6), 5vw, var(--space-8));
-  background: radial-gradient(135% 95% at 0% 0%, var(--primary-soft) 0%, var(--bg-page) 48%);
+  padding: clamp(var(--space-6), 4vw, var(--space-8));
+  background: radial-gradient(120% 80% at 0% 0%, var(--primary-soft) 0%, var(--bg-card) 42%);
 }
 
 .auth__form {
   width: 100%;
-  max-width: clamp(360px, 38vw, 720px);
+  max-width: clamp(460px, 34vw, 680px);
   margin: auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(var(--space-4), 1.4vw, var(--space-6));
+  gap: clamp(var(--space-5), 1.5vw, var(--space-6));
 }
 
+/* El PNG del logo trae mucho margen transparente; lo recortamos con
+   object-fit: cover en una caja ~4:1 para que el logo se vea grande. */
 .auth__logo {
-  height: clamp(48px, 4.5vw, 88px);
-  width: auto;
-  object-fit: contain;
-  align-self: flex-start;
-  margin-bottom: clamp(var(--space-5), 2vw, var(--space-7));
+  width: clamp(230px, 24vw, 380px);
+  height: clamp(60px, 6vw, 96px);
+  object-fit: cover;
+  object-position: center;
+  align-self: center;
+  margin-bottom: clamp(var(--space-3), 1.4vw, var(--space-5));
 }
 
 .auth__heading {
@@ -40,7 +76,7 @@
 }
 
 .auth__title {
-  font-size: clamp(2rem, 2.8vw, 3.2rem);
+  font-size: clamp(2rem, 2.6vw, 2.9rem);
   font-weight: var(--fw-bold);
   color: var(--text-primary);
   line-height: var(--lh-tight);
@@ -48,14 +84,14 @@
 }
 
 .auth__subtitle {
-  font-size: clamp(0.95rem, 1.1vw, 1.25rem);
+  font-size: clamp(1rem, 1.1vw, 1.2rem);
   color: var(--text-secondary);
 }
 
 .auth__row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
 
 .auth__field {
@@ -66,7 +102,7 @@
 }
 
 .auth__label {
-  font-size: clamp(0.9rem, 0.95vw, 1.1rem);
+  font-size: var(--fs-base);
   font-weight: var(--fw-medium);
   color: var(--text-primary);
 }
@@ -78,7 +114,7 @@
   background-color: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-md);
-  padding: clamp(var(--space-3), 0.9vw, var(--space-4)) clamp(var(--space-4), 1.1vw, var(--space-5));
+  padding: clamp(var(--space-3), 0.9vw, var(--space-4)) var(--space-5);
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
@@ -99,7 +135,7 @@
   border: none;
   outline: none;
   color: var(--text-primary);
-  font-size: clamp(1rem, 0.95vw, 1.2rem);
+  font-size: var(--fs-lg);
 }
 
 .auth__input::placeholder { color: var(--text-muted); }
@@ -121,7 +157,7 @@
   justify-content: space-between;
   gap: var(--space-3);
   flex-wrap: wrap;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-base);
 }
 
 .auth__check {
@@ -133,8 +169,8 @@
 }
 
 .auth__check input {
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
   accent-color: var(--primary-dark);
   cursor: pointer;
 }
@@ -148,7 +184,7 @@
 .auth__forgot:hover { color: var(--primary-dark-hover); }
 
 .auth__hint {
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--text-secondary);
 }
 
@@ -157,13 +193,13 @@
 .auth__submit {
   width: 100%;
   margin-top: var(--space-3);
-  padding: clamp(var(--space-3), 1.1vw, var(--space-4));
-  font-size: clamp(1rem, 1vw, 1.2rem);
+  padding: clamp(var(--space-4), 1.1vw, var(--space-5));
+  font-size: var(--fs-lg);
   box-shadow: var(--shadow-card);
 }
 
 .auth__alt {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-base);
   color: var(--text-secondary);
   text-align: center;
   margin-top: var(--space-2);
@@ -176,11 +212,12 @@
 
 .auth__alt-link:hover { color: var(--primary-dark-hover); }
 
+/* Lado derecho: imagen 50% */
 .auth__visual {
   position: relative;
   height: 100%;
   overflow: hidden;
-  background-color: var(--primary-dark);
+  background-color: var(--accent-deep);
 }
 
 .auth__visual-img {
@@ -192,7 +229,11 @@
 }
 
 @media (max-width: 860px) {
-  .auth { grid-template-columns: 1fr; }
+  .auth__card {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: min(680px, 94vh);
+  }
   .auth__visual { display: none; }
 }
 

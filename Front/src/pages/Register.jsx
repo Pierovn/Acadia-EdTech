@@ -36,6 +36,7 @@ const Register = () => {
 
   return (
     <div className="auth">
+      <div className="auth__card">
       <div className="auth__panel">
         <motion.form className="auth__form" onSubmit={handleSubmit} variants={container} initial="hidden" animate="show">
           <motion.img src={logoAcadia} alt="Acadia" className="auth__logo" variants={item} />
@@ -103,6 +104,7 @@ const Register = () => {
       <motion.aside className="auth__visual" variants={visual} initial="hidden" animate="show">
         <img src={ladoDerecho} alt="Estudiante aprendiendo en Acadia" className="auth__visual-img" />
       </motion.aside>
+      </div>
     </div>
   )
 }

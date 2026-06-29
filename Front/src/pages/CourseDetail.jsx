@@ -9,11 +9,12 @@ import { matricularse, getMisCursos, actualizarEstadoMatricula } from '../servic
 import { getMaterialesPorCurso } from '../services/materiales.service'
 import { getProgreso, actualizarProgreso } from '../services/progreso.service'
 import { getCalificaciones, crearCalificacion } from '../services/calificaciones.service'
+import { getSuscripciones } from '../services/suscripciones.service'
 import { useAuth } from '../context/AuthContext'
 import { courseImage } from '../components/ui/courseImages'
 import { QUIZZES } from '../data/quizzes'
 import {
-  IconClock, IconForum, IconCreditCard, IconCheck, IconPlay, IconDoc, IconQuiz, IconLock, IconCheckCircle,
+  IconClock, IconForum, IconCheck, IconPlay, IconDoc, IconQuiz, IconLock, IconCheckCircle,
 } from '../components/ui/Icons'
 
 const NOTA_POR_DEFECTO = 20
@@ -60,6 +61,7 @@ const CourseDetail = () => {
   const [materiales, setMateriales] = useState([])
   const [completadas, setCompletadas] = useState([])
   const [matricula, setMatricula] = useState(null)
+  const [subActiva, setSubActiva] = useState(null)
   const [califs, setCalifs] = useState([])
   const [registrando, setRegistrando] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -80,6 +82,9 @@ const CourseDetail = () => {
         .then((list) => setMatricula(list.find((m) => Number(m.ID_CURSO) === Number(id)) || null))
         .catch(() => setMatricula(null))
       getCalificaciones().then(setCalifs).catch(() => setCalifs([]))
+      getSuscripciones()
+        .then((subs) => setSubActiva((subs || []).find((s) => s.ESTADO === 'ACTIVO') || null))
+        .catch(() => setSubActiva(null))
     }
   }, [id, isAuthenticated])
 
@@ -121,6 +126,11 @@ const CourseDetail = () => {
 
   const handleMatricula = async () => {
     if (!isAuthenticated) return navigate('/login')
+    if (!subActiva) {
+      // Sin suscripción activa no se puede matricular: lo enviamos a la pasarela.
+      navigate('/checkout')
+      return
+    }
     setMsg('')
     try {
       await matricularse(Number(id))
@@ -183,19 +193,16 @@ const CourseDetail = () => {
             </div>
             <div className="detail__actions">
               {estaMatriculado ? (
-                <span className="detail__enrolled"><IconCheckCircle width={18} height={18} /> Ya estás matriculado</span>
+                matricula.ESTADO === 'COMPLETADO' ? (
+                  <span className="detail__enrolled detail__enrolled--done"><IconCheckCircle width={18} height={18} /> Curso completado</span>
+                ) : (
+                  <span className="detail__enrolled"><IconCheckCircle width={18} height={18} /> Ya estás matriculado</span>
+                )
               ) : (
                 <button type="button" className="acd-btn acd-btn--primary" onClick={handleMatricula}>
                   Matricularme
                 </button>
               )}
-              <button
-                type="button"
-                className="acd-btn acd-btn--ghost"
-                onClick={() => navigate('/checkout', { state: { plan: 'UNICO', monto: Number(curso.PRECIO), titulo: curso.TITULO } })}
-              >
-                <IconCreditCard width={18} height={18} /> Comprar acceso
-              </button>
               <Link to={`/foro/${curso.ID_CURSO}`} className="acd-btn acd-btn--ghost">
                 <IconForum width={18} height={18} /> Foro del curso
               </Link>

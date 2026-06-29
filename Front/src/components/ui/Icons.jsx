@@ -19,7 +19,7 @@ export const IconProfile = (p) => (
 )
 
 export const IconCourses = (p) => (
-  <svg {...base} {...p}><path d="M4 5a2 2 0 0 1 2-2h6v16H6a2 2 0 0 0-2 2z" /><path d="M20 5a2 2 0 0 0-2-2h-6v16h6a2 2 0 0 1 2 2z" /></svg>
+  <svg {...base} {...p}><path d="M12 4 2 9l10 5 10-5-10-5z" /><path d="M6 11.2V16c0 1.4 2.7 2.4 6 2.4s6-1 6-2.4v-4.8" /><path d="M22 9v5.5" /></svg>
 )
 
 export const IconForum = (p) => (
@@ -27,7 +27,7 @@ export const IconForum = (p) => (
 )
 
 export const IconSettings = (p) => (
-  <svg {...base} {...p}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.1A1.6 1.6 0 0 0 6.8 19l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3 13.4H3a2 2 0 0 1 0-4h.1A1.6 1.6 0 0 0 5 6.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10.6 5h0A1.6 1.6 0 0 0 12 3.1V3a2 2 0 0 1 4 0v.1A1.6 1.6 0 0 0 18.2 5l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8z" /></svg>
+  <svg {...base} {...p}><path d="M4 6h8" /><path d="M16 6h4" /><circle cx="14" cy="6" r="2" /><path d="M4 12h2" /><path d="M10 12h10" /><circle cx="8" cy="12" r="2" /><path d="M4 18h8" /><path d="M16 18h4" /><circle cx="14" cy="18" r="2" /></svg>
 )
 
 export const IconMail = (p) => (
@@ -60,6 +60,26 @@ export const IconCertificate = (p) => (
 
 export const IconChevron = (p) => (
   <svg {...base} {...p}><path d="m9 18 6-6-6-6" /></svg>
+)
+
+export const IconBell = (p) => (
+  <svg {...base} {...p}><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></svg>
+)
+
+export const IconArrowUpRight = (p) => (
+  <svg {...base} {...p}><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg>
+)
+
+export const IconPause = (p) => (
+  <svg {...base} fill="currentColor" stroke="none" {...p}><rect x="7" y="5" width="3.5" height="14" rx="1.2" /><rect x="13.5" y="5" width="3.5" height="14" rx="1.2" /></svg>
+)
+
+export const IconStop = (p) => (
+  <svg {...base} fill="currentColor" stroke="none" {...p}><rect x="6" y="6" width="12" height="12" rx="2.5" /></svg>
+)
+
+export const IconX = (p) => (
+  <svg {...base} {...p}><path d="M6 6l12 12M18 6 6 18" /></svg>
 )
 
 export const IconClock = (p) => (

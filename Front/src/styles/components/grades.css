@@ -50,6 +50,22 @@
   color: var(--text-secondary);
 }
 
+/* Tarjeta de gráfico (usada por Calificaciones) */
+.chart-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-soft);
+}
+
+.chart-card__title {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+
 .grades-chart { margin-bottom: var(--space-6); }
 
 .grades-list {

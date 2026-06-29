@@ -110,6 +110,11 @@
   padding: var(--space-3) var(--space-5);
 }
 
+.detail__enrolled--done {
+  color: var(--on-primary-dark);
+  background-color: var(--primary-dark);
+}
+
 /* Banner de contenido bloqueado (sin matrícula) */
 .detail__lock {
   display: flex;

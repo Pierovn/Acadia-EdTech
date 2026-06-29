@@ -1,16 +1,15 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import Avatar from './Avatar'
 import {
   IconDashboard, IconProfile, IconCourses, IconForum,
   IconSettings, IconLogout, IconCertificate, IconCreditCard, IconChevron,
 } from './Icons'
-import logoAcadia from '../../assets/logo-acadia.png'
+import logoAcadia from '../../assets/logo-solo-icono.png'
 
 const grupos = [
   {
-    titulo: 'Aprendizaje',
+    titulo: 'Menú',
     items: [
       { to: '/dashboard', label: 'Dashboard', Icon: IconDashboard },
       { to: '/catalog', label: 'Cursos', Icon: IconCourses },
@@ -33,7 +32,7 @@ const readCollapsed = () => {
 }
 
 const Navbar = () => {
-  const { usuario, logout } = useAuth()
+  const { logout } = useAuth()
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(readCollapsed)
 
@@ -50,8 +49,6 @@ const Navbar = () => {
     navigate('/login')
   }
 
-  const nombre = usuario?.email ? usuario.email.split('@')[0] : 'Invitado'
-
   return (
     <aside className={collapsed ? 'sidebar sidebar--collapsed' : 'sidebar'}>
       <button
@@ -64,13 +61,12 @@ const Navbar = () => {
       </button>
 
       <div className="sidebar__brand">
-        <span className="sidebar__logo-chip">
-          <img src={logoAcadia} alt="Acadia" className="sidebar__logo" />
-        </span>
+        <span className="sidebar__logo"><img src={logoAcadia} alt="Acadia" /></span>
+        <span className="sidebar__brand-name">Acadia</span>
       </div>
 
       <nav className="sidebar__nav">
-        {grupos.map((grupo) => (
+        {grupos.map((grupo, idx) => (
           <div className="sidebar__group" key={grupo.titulo}>
             <span className="sidebar__section">{grupo.titulo}</span>
             {grupo.items.map(({ to, label, Icon }) => (
@@ -82,30 +78,25 @@ const Navbar = () => {
                   isActive ? 'sidebar__link sidebar__link--active' : 'sidebar__link'
                 }
               >
-                <span className="sidebar__tile">
-                  <Icon className="sidebar__icon" width={18} height={18} />
-                </span>
+                <Icon className="sidebar__icon" width={20} height={20} />
                 <span className="sidebar__label">{label}</span>
               </NavLink>
             ))}
+
+            {idx === grupos.length - 1 && (
+              <button
+                type="button"
+                className="sidebar__link sidebar__logout"
+                onClick={handleLogout}
+                title={collapsed ? 'Cerrar sesión' : undefined}
+              >
+                <IconLogout className="sidebar__icon" width={20} height={20} />
+                <span className="sidebar__label">Cerrar sesión</span>
+              </button>
+            )}
           </div>
         ))}
       </nav>
-
-      <div className="sidebar__foot">
-        <div className="sidebar__user">
-          <Avatar name={nombre} size="md" />
-          <span className="sidebar__user-info">
-            <span className="sidebar__user-name">{nombre}</span>
-            <span className="sidebar__user-mail">{usuario?.email || 'Sesión activa'}</span>
-          </span>
-        </div>
-
-        <button type="button" className="sidebar__logout" onClick={handleLogout} title="Cerrar sesión">
-          <IconLogout className="sidebar__icon" width={18} height={18} />
-          <span className="sidebar__label">Cerrar sesión</span>
-        </button>
-      </div>
     </aside>
   )
 }
